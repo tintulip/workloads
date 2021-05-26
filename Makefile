@@ -27,5 +27,5 @@ init: set-env
 plan: init
 	@terraform -chdir=$(TF_DIR) plan
 
-apply: prep
+apply: init
 	@terraform -chdir=$(TF_DIR) apply
