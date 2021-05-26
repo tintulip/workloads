@@ -1,8 +1,7 @@
 variable "user" {
-  type = "String"
+  type = string
 }
 
-variable "gpg_key"{
-    type = "String"
-
+variable "gpg_key" {
+  type = string
 }

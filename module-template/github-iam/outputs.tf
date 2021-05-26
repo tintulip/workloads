@@ -6,6 +6,10 @@ output "role_arn" {
   value = aws_iam_role.role.arn
 }
 
-output "encrypted_key" {
+output "encrypted_secret_key" {
   value = aws_iam_access_key.user_key.encrypted_secret
+}
+
+output "access_key" {
+  value = aws_iam_access_key.user_key.id
 }

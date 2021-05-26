@@ -1,8 +1,8 @@
 # infra-pipeline
-This will set up the infrastructure for the trusted pipeline. 
+This will set up the infrastructure for the trusted pipeline.
 
 
-## The repository structure 
+## The repository structure
 This repository has the following directories :
 
 - Module-template
@@ -12,3 +12,9 @@ This repository has the following directories :
 The Module-template directory contains grouped resources that are frequently used, components directory uses these modules and the environemnts directory specifies the different environment that will use these resources.
 
 
+## Sandbox commands
+
+```bash
+AWS_REGION=eu-west-2 AWS_PROFILE=tintulip-sandbox-admin ENV=sandbox make plan
+AWS_REGION=eu-west-2 AWS_PROFILE=tintulip-sandbox-admin ENV=sandbox make apply
+```

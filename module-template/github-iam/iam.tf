@@ -7,7 +7,7 @@ resource "aws_iam_user" "user" {
 
 
 
-data "aws_caller_identity" "current" {} 
+data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "role" {
   assume_role_policy = <<POLICY
@@ -32,14 +32,15 @@ POLICY
   name                 = var.user
   path                 = "/"
 
-  
+
 }
 
 resource "aws_iam_user_policy" "user_policy" {
+  #checkov:skip=CKV_AWS_40:only the user is allowed to assume the role
   name = var.user
   user = aws_iam_user.user.name
 
-  
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -56,5 +57,5 @@ resource "aws_iam_user_policy" "user_policy" {
 
 resource "aws_iam_access_key" "user_key" {
   user    = aws_iam_user.user.name
-  pgp_key = var.gpg_key  
+  pgp_key = var.gpg_key
 }
