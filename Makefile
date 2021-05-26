@@ -21,10 +21,10 @@ set-env:
 		exit 1; \
 	fi;
 
-prep: set-env
+init: set-env
 	@terraform -chdir=$(TF_DIR) init
 
-plan: prep
+plan: init
 	@terraform -chdir=$(TF_DIR) plan
 
 apply: prep
