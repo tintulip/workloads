@@ -6,7 +6,6 @@ resource "aws_iam_user" "user" {
 }
 
 
-
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "role" {
@@ -14,7 +13,7 @@ resource "aws_iam_role" "role" {
 {
   "Statement": [
     {
-      "Action": "sts:AssumeRole","sts:TagSession",
+      "Action": ["sts:AssumeRole","sts:TagSession"],
       "Condition": {},
       "Effect": "Allow",
       "Principal": {
@@ -46,7 +45,7 @@ resource "aws_iam_user_policy" "user_policy" {
     Statement = [
       {
         Action = [
-          "sts:AssumeRole",
+          "sts:AssumeRole", "sts:TagSession"
         ]
         Effect   = "Allow"
         Resource = aws_iam_role.role.arn
