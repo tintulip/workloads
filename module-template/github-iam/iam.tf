@@ -14,7 +14,7 @@ resource "aws_iam_role" "role" {
 {
   "Statement": [
     {
-      "Action": "sts:AssumeRole",
+      "Action": "sts:AssumeRole","sts:TagSession",
       "Condition": {},
       "Effect": "Allow",
       "Principal": {
