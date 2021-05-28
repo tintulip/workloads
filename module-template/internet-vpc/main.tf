@@ -36,10 +36,11 @@ module "vpc" {
 }
 
 resource "aws_lb" "internet" {
-  name               = "${var.vpc_name}-lb"
-  internal           = true
-  load_balancer_type = "network"
-  subnets            = module.vpc.private_subnets
+  name                             = "${var.vpc_name}-lb"
+  internal                         = true
+  load_balancer_type               = "network"
+  enable_cross_zone_load_balancing = true
+  subnets                          = module.vpc.private_subnets
 
   enable_deletion_protection = true
 
@@ -48,7 +49,7 @@ resource "aws_lb" "internet" {
   }
 }
 
-resource "aws_vpc_endpoint_service" "example" {
+resource "aws_vpc_endpoint_service" "internet" {
   count                      = var.create_endpoint ? 1 : 0
   acceptance_required        = var.acceptance_required
   allowed_principals         = var.allowed_principals

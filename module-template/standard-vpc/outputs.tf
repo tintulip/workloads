@@ -1,14 +1,19 @@
 output "vpc_id" {
   description = "The ID of the VPC"
-  value       = module.vpc.vpc_id
+  value       = aws_vpc.workload.id
 }
 
 output "vpc_arn" {
   description = "The ARN of the VPC"
-  value       = module.vpc.vpc_arn
+  value       = aws_vpc.workload.arn
 }
 
 output "private_subnets" {
   description = "Private subnets of VPC"
-  value       = module.vpc.private_subnets
+  value       = var.private_subnets
+}
+
+output "cidr" {
+  description = "Cidr of VPC"
+  value       = var.cidr
 }

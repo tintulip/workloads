@@ -29,7 +29,7 @@ variable "create_endpoint" {
 }
 
 variable "acceptance_required" {
-  default = false
+  default = true
 }
 
 variable "allowed_principals" {
