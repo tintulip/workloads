@@ -24,6 +24,17 @@ variable "env" {
 variable "owner" {
 }
 
+variable "create_endpoint" {
+  default = true
+}
+
+variable "acceptance_required" {
+  default = false
+}
+
+variable "allowed_principals" {
+}
+
 locals {
   az = ["${var.region}a", "${var.region}b", "${var.region}c"]
 }

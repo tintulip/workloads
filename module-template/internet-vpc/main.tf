@@ -34,3 +34,23 @@ module "vpc" {
     Name = var.vpc_name
   }
 }
+
+resource "aws_lb" "internet" {
+  name               = "${var.vpc_name}-lb"
+  internal           = true
+  load_balancer_type = "network"
+  subnets            = module.vpc.private_subnets
+
+  enable_deletion_protection = true
+
+  tags = {
+    Environment = var.env
+  }
+}
+
+resource "aws_vpc_endpoint_service" "example" {
+  count                      = var.create_endpoint ? 1 : 0
+  acceptance_required        = var.acceptance_required
+  allowed_principals         = var.allowed_principals
+  network_load_balancer_arns = [aws_lb.internet.arn]
+}
