@@ -15,3 +15,7 @@ module "network" {
   account_id  = data.aws_caller_identity.builder.account_id
   environment = local.environment
 }
+
+module "pipeline" {
+  source = "../../components/pipeline"
+}
