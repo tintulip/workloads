@@ -2,7 +2,7 @@ variable "vpc_name" {
   default = "internet"
 }
 
-variable "cidr" {
+variable "cidr_block" {
   default = "172.16.0.0/16"
 }
 
@@ -14,11 +14,11 @@ variable "public_subnets" {
   default = ["172.16.101.0/24", "172.16.102.0/24", "172.16.103.0/24"]
 }
 
-variable "region" {
+variable "aws_region" {
   default = "eu-west-2"
 }
 
-variable "env" {
+variable "environment" {
 }
 
 variable "owner" {
@@ -36,5 +36,5 @@ variable "allowed_principals" {
 }
 
 locals {
-  az = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  az = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
 }

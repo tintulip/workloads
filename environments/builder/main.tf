@@ -10,9 +10,8 @@ module "state_bucket" {
 }
 
 module "network" {
-  source            = "../../components/networking"
-  owner             = "governance"
-  account_id        = data.aws_caller_identity.builder.account_id
-  environment       = local.environment
-  workload_vpc_name = "codePipeline"
+  source      = "../../components/networking"
+  owner       = "governance"
+  account_id  = data.aws_caller_identity.builder.account_id
+  environment = local.environment
 }
