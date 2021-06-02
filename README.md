@@ -1,5 +1,5 @@
-# infra-pipeline
-This will set up the infrastructure for the trusted pipeline.
+# Preproduction
+This will set up the infrastructure for the preproduction account
 
 
 ## The repository structure
