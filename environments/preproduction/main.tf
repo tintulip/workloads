@@ -1,8 +1,8 @@
 locals {
-  environment = "builder"
+  environment = "preproduction"
 }
 
-data "aws_caller_identity" "builder" {}
+data "aws_caller_identity" "preproduction" {}
 
 module "state_bucket" {
   source      = "../../module-template/remote-state-bucket"
@@ -11,11 +11,7 @@ module "state_bucket" {
 
 module "network" {
   source      = "../../components/networking"
-  owner       = "governance"
-  account_id  = data.aws_caller_identity.builder.account_id
+  owner       = "platform"
+  account_id  = data.aws_caller_identity.preproduction.account_id
   environment = local.environment
-}
-
-module "pipeline" {
-  source = "../../components/pipeline"
 }

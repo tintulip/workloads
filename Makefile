@@ -1,6 +1,6 @@
 .ONESHELL:
 .SHELL := /usr/bin/bash
-.PHONY: plan apply init
+.PHONY: plan apply init set-env
 TF_DIR="./environments/$(ENV)"
 
 set-env:

@@ -1,5 +1,4 @@
 variable "vpc_name" {
-  default = "internet"
 }
 
 variable "cidr_block" {
@@ -19,22 +18,9 @@ variable "aws_region" {
 }
 
 variable "environment" {
+  description = "for tagging"
 }
 
 variable "owner" {
-}
-
-variable "create_endpoint" {
-  default = true
-}
-
-variable "acceptance_required" {
-  default = true
-}
-
-variable "allowed_principals" {
-}
-
-locals {
-  az = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
+  description = "for tagging"
 }

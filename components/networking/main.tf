@@ -1,7 +1,7 @@
-module "internet_vpc" {
-  source = "../../module-template/internet-vpc"
+module "workload_vpc" {
+  source = "../../module-template/vpc"
 
-  vpc_name   = "builder-pipeline"
+  vpc_name   = "workloads"
   aws_region = "eu-west-2"
   cidr_block = "10.100.0.0/16"
 
@@ -10,5 +10,4 @@ module "internet_vpc" {
 
   environment        = var.environment
   owner              = var.owner
-  allowed_principals = ["arn:aws:iam::${var.account_id}:root"]
 }

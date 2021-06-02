@@ -1,3 +1,7 @@
+locals {
+  az = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
+}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
