@@ -38,3 +38,27 @@ resource "aws_iam_role_policy_attachment" "infrastructure_pipeline_admin_access"
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
   role       = aws_iam_role.infrastructure_pipeline.name
 }
+
+resource "aws_ecs_cluster" "workloads" {
+  name = "workloads"
+  capacity_providers = ["FARGATE"]
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+}
+
+resource "aws_ecs_service" "web_application" {
+  name            = "web-application"
+  cluster         = aws_ecs_cluster.workloads.id
+  task_definition = aws_ecs_task_definition.web_application.arn
+  desired_count   = 3
+
+}
+
+resource "aws_ecs_task_definition" "web_application" {
+  family = "web-application"
+  container_definitions = jsonencode([
+  ])
+}
