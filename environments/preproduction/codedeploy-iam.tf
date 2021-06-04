@@ -1,3 +1,16 @@
+data "aws_iam_policy_document" "assume_by_codedeploy" {
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["codedeploy.amazonaws.com"]
+    }
+  }
+}
+
 resource "aws_iam_role" "codedeploy" {
   name               = "app_deployer"
   assume_role_policy = data.aws_iam_policy_document.assume_by_codedeploy.json
@@ -29,7 +42,7 @@ data "aws_iam_policy_document" "codedeploy" {
 
     actions = ["s3:GetObject"]
 
-    resources = ["${aws_s3_bucket.this.arn}/*"]
+    resources = ["arn:aws:s3:::cla-pipeline-artifacts/*"]
   }
 
   statement {
@@ -58,32 +71,43 @@ data "aws_iam_policy_document" "codedeploy" {
     ]
 
     resources = ["*"]
-
-    statement {
-      sid    = "AllowECS"
-      effect = "Allow"
-
-      actions = ["ecs:*"]
-
-      resources = ["*"]
-    }
-
-    statement {
-      sid    = "AllowPassRole"
-      effect = "Allow"
-
-      resources = ["*"]
-
-      actions = ["iam:PassRole"]
-
-      condition {
-        test     = "StringLike"
-        values   = ["ecs-tasks.amazonaws.com"]
-        variable = "iam:PassedToService"
-      }
-    }
   }
 
+  statement {
+    sid    = "AllowECS"
+    effect = "Allow"
+
+    actions = ["ecs:*"]
+
+    resources = ["*"]  
+  }
+
+  statement {
+    sid    = "AllowPassRole"
+    effect = "Allow"
+
+    resources = ["*"]
+
+    actions = ["iam:PassRole"]
+
+    condition {
+      test     = "StringLike"
+      values   = ["ecs-tasks.amazonaws.com"]
+      variable = "iam:PassedToService"
+    }
+  }
+  
+  statement {
+    sid    = "AllowPipelineToAssume"
+    effect = "Allow"
+
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${local.builder_account_id}:root"]
+    }
+  }
 }
 
 resource "aws_iam_role_policy" "codedeploy" {
