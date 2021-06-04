@@ -8,6 +8,11 @@ data "aws_iam_policy_document" "assume_by_codedeploy" {
       type        = "Service"
       identifiers = ["codedeploy.amazonaws.com"]
     }
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${local.builder_account_id}:root"]
+    }
   }
 }
 
@@ -94,18 +99,6 @@ data "aws_iam_policy_document" "codedeploy" {
       test     = "StringLike"
       values   = ["ecs-tasks.amazonaws.com"]
       variable = "iam:PassedToService"
-    }
-  }
-
-  statement {
-    sid    = "AllowPipelineToAssume"
-    effect = "Allow"
-
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.builder_account_id}:root"]
     }
   }
 }
