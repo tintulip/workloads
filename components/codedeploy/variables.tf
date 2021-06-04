@@ -5,3 +5,7 @@ variable "service_name" {
 variable "cluster_arn" {
   type = string
 }
+
+variable "role_arn" {
+  type = string
+}
