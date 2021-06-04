@@ -142,34 +142,16 @@ resource "aws_lb_listener" "web_application" {
 # DNS stuff
 
 locals {
-  dns_first_level  = "tintulip-scenario1.net"
-  dns_second_level = "www.${local.dns_first_level}"
+  dns_domain  = "tintulip-scenario1.net"
+  web_application_hostname = "www.${local.dns_first_level}"
 }
 
 resource "aws_route53_zone" "tintulip_scenario1" {
-  name = local.dns_first_level
-}
-
-resource "aws_route53_zone" "www_tintulip_scenario1" {
-  name = local.dns_second_level
-}
-
-resource "aws_route53_record" "scenario1_zone_ns" {
-  zone_id = aws_route53_zone.tintulip_scenario1.zone_id
-  name    = local.dns_second_level
-  type    = "NS"
-  ttl     = "30"
-
-  records = [
-    aws_route53_zone.www_tintulip_scenario1.name_servers.0,
-    aws_route53_zone.www_tintulip_scenario1.name_servers.1,
-    aws_route53_zone.www_tintulip_scenario1.name_servers.2,
-    aws_route53_zone.www_tintulip_scenario1.name_servers.3,
-  ]
+  name = local.dns_domain
 }
 
 resource "aws_acm_certificate" "web_application" {
-  domain_name       = local.dns_second_level
+  domain_name       = local.web_application_hostname
   validation_method = "DNS"
 
   lifecycle {
@@ -187,19 +169,19 @@ resource "aws_route53_record" "web_application_validation" {
   }
   name    = each.value.name
   type    = each.value.type
-  zone_id = aws_route53_zone.www_tintulip_scenario1.zone_id
+  zone_id = aws_route53_zone.tintulip_scenario1.zone_id
   records = [each.value.record]
   ttl     = 60
 }
 
 resource "aws_acm_certificate_validation" "web_application" {
   certificate_arn         = aws_acm_certificate.web_application.arn
-  validation_record_fqdns = [aws_route53_record.web_application.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.web_application_validation : record.fqdn]
 }
 
 resource "aws_route53_record" "web_application" {
-  zone_id = aws_route53_zone.www_tintulip_scenario1.zone_id
-  name    = local.dns_second_level
+  zone_id = aws_route53_zone.tintulip_scenario1.zone_id
+  name    = local.web_application_hostname
   type    = "A"
 
   alias {
