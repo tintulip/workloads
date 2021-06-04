@@ -1,5 +1,5 @@
 locals {
-  environment = "preproduction"
+  environment        = "preproduction"
   builder_account_id = "620540024451"
 }
 
@@ -40,7 +40,7 @@ resource "aws_iam_role_policy_attachment" "infrastructure_pipeline_admin_access"
 }
 
 resource "aws_ecs_cluster" "workloads" {
-  name = "workloads"
+  name               = "workloads"
   capacity_providers = ["FARGATE"]
 
   setting {
@@ -90,3 +90,42 @@ resource "aws_security_group" "web_application_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_lb" "web_application" {
+  name               = "web_application"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.web_application_sg.id]
+  subnets            = module.network.private_subnets
+}
+
+resource "aws_lb_target_group" "web_application" {
+  name        = "web_application"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = module.network.vpc_id
+
+  health_check {
+    path    = "/"
+    matcher = "302,200"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# missing a certificate to make this work over https!
+# resource "aws_lb_listener" "web_application" {
+#   load_balancer_arn = aws_lb.web_application.arn
+#   port              = "443"
+#   protocol          = "HTTPS"
+#   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+#   certificate_arn   = aws_acm_certificate.????.arn
+
+#   default_action {
+#     target_group_arn = aws_lb_target_group.web_application.arn
+#     type             = "forward"
+#   }
+# }
