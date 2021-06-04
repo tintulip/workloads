@@ -92,7 +92,7 @@ resource "aws_security_group" "web_application_sg" {
 }
 
 resource "aws_lb" "web_application" {
-  name               = "web_application"
+  name               = "web-application"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.web_application_sg.id]
@@ -100,7 +100,7 @@ resource "aws_lb" "web_application" {
 }
 
 resource "aws_lb_target_group" "web_application" {
-  name        = "web_application"
+  name        = "web-application"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
