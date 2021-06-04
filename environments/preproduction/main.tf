@@ -56,27 +56,27 @@ resource "aws_ecs_cluster" "workloads" {
   }
 }
 
-resource "aws_ecs_service" "web_application" {
-  name            = "web-application"
-  cluster         = aws_ecs_cluster.workloads.id
-  task_definition = aws_ecs_task_definition.web_application.arn
-  desired_count   = 3
+# resource "aws_ecs_service" "web_application" {
+#   name            = "web-application"
+#   cluster         = aws_ecs_cluster.workloads.id
+#   task_definition = aws_ecs_task_definition.web_application.arn
+#   desired_count   = 3
 
-}
+# }
 
-resource "aws_ecs_task_definition" "web_application" {
-  family = "web-application"
-  container_definitions = jsonencode([
-  ])
-}
+# resource "aws_ecs_task_definition" "web_application" {
+#   family = "web-application"
+#   container_definitions = jsonencode([
+#   ])
+# }
 
 # the networking stuff needs to go here:
-# speculating wildly 
-# - we need a task definition 
+# speculating wildly
+# - we need a task definition
 #         which requires a container
 #         we configure as vpc networking
-#                   relates to-> a subnet/security group in a VPC 
-#                   
+#                   relates to-> a subnet/security group in a VPC
+#
 # we can then add the load balancer into that security group, and do other networking to expose it?
 # so... because we need to connect to a load of external VPC networking we'll set that up first
 
