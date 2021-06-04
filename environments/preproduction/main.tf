@@ -57,9 +57,9 @@ resource "aws_ecs_cluster" "workloads" {
 }
 
 resource "aws_ecs_service" "web_application" {
-  name            = "web-application"
-  cluster         = aws_ecs_cluster.workloads.id
-  desired_count   = 3
+  name          = "web-application"
+  cluster       = aws_ecs_cluster.workloads.id
+  desired_count = 3
   deployment_controller {
     type = "EXTERNAL"
   }
@@ -140,7 +140,7 @@ resource "aws_lb_listener" "web_application" {
 # DNS stuff
 
 locals {
-  dns_first_level = "tintulip-scenario1.net"
+  dns_first_level  = "tintulip-scenario1.net"
   dns_second_level = "www.${local.dns_first_level}"
 }
 
@@ -176,10 +176,17 @@ resource "aws_acm_certificate" "web_application" {
 }
 
 resource "aws_route53_record" "web_application_validation" {
-  name    = aws_acm_certificate.web_application.domain_validation_options.resource_record_name
-  type    = aws_acm_certificate.web_application.domain_validation_options.resource_record_type
+  for_each = {
+    for dvo in aws_acm_certificate.web_application.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+  name    = each.value.name
+  type    = each.value.type
   zone_id = aws_route53_zone.www_tintulip_scenario1.zone_id
-  records = [aws_acm_certificate.web_application.domain_validation_options.resource_record_value]
+  records = [each.value.record]
   ttl     = 60
 }
 
