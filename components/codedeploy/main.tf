@@ -20,7 +20,7 @@ resource "aws_codedeploy_deployment_group" "this" {
   }
 
   ecs_service {
-    cluster_name = var.cluster_arn
+    cluster_name = var.cluster_name
     service_name = var.service_name
   }
 

@@ -22,6 +22,7 @@ module "web_application_deployment" {
   role_arn     = aws_iam_role.codedeploy.arn
   service_name = aws_ecs_service.web_application.name
   cluster_arn  = aws_ecs_cluster.workloads.arn
+  cluster_name = aws_ecs_cluster.workloads.name
 }
 
 data "aws_iam_policy_document" "infrastructure_pipeline_trust_policy" {
