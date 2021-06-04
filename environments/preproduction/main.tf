@@ -124,8 +124,50 @@ resource "aws_lb_target_group" "web_application" {
   }
 }
 
+
+resource "aws_lb_listener" "web_application" {
+  load_balancer_arn = aws_lb.web_application.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = aws_acm_certificate.web_application.arn
+  default_action {
+    target_group_arn = aws_lb_target_group.web_application.arn
+    type             = "forward"
+  }
+}
+
+# DNS stuff
+
+locals {
+  dns_first_level = "tintulip-scenario1.net"
+  dns_second_level = "www.${local.dns_first_level}"
+}
+
+resource "aws_route53_zone" "tintulip_scenario1" {
+  name = local.dns_first_level
+}
+
+resource "aws_route53_zone" "www_tintulip_scenario1" {
+  name = local.dns_second_level
+}
+
+resource "aws_route53_record" "scenario1_zone_ns" {
+  zone_id = aws_route53_zone.tintulip_scenario1.zone_id
+  name    = local.dns_second_level
+  type    = "NS"
+  ttl     = "30"
+
+  records = [
+    aws_route53_zone.www_tintulip_scenario1.name_servers.0,
+    aws_route53_zone.www_tintulip_scenario1.name_servers.1,
+    aws_route53_zone.www_tintulip_scenario1.name_servers.2,
+    aws_route53_zone.www_tintulip_scenario1.name_servers.3,
+  ]
+}
+
 resource "aws_acm_certificate" "web_application" {
-  domain_name       = aws_lb.web_application.dns_name
+  domain_name       = local.dns_second_level
   validation_method = "DNS"
 
   lifecycle {
@@ -133,15 +175,27 @@ resource "aws_acm_certificate" "web_application" {
   }
 }
 
-# missing a certificate to make this work over https!
- resource "aws_lb_listener" "web_application" {
-   load_balancer_arn = aws_lb.web_application.arn
-   port              = "443"
-   protocol          = "HTTPS"
-   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-   certificate_arn   = aws_acm_certificate.web_application.arn
-   default_action {
-     target_group_arn = aws_lb_target_group.web_application.arn
-     type             = "forward"
-   }
- }
+resource "aws_route53_record" "web_application_validation" {
+  name    = aws_acm_certificate.web_application.domain_validation_options.0.resource_record_name
+  type    = aws_acm_certificate.web_application.domain_validation_options.0.resource_record_type
+  zone_id = aws_route53_zone.www_tintulip_scenario1.zone_id
+  records = [aws_acm_certificate.web_application.domain_validation_options.0.resource_record_value]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "web_application" {
+  certificate_arn         = aws_acm_certificate.web_application.arn
+  validation_record_fqdns = [aws_route53_record.web_application.fqdn]
+}
+
+resource "aws_route53_record" "web_application" {
+  zone_id = aws_route53_zone.www_tintulip_scenario1.zone_id
+  name    = local.dns_second_level
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.web_application.dns_name
+    zone_id                = aws_lb.web_application.zone_id
+    evaluate_target_health = true
+  }
+}
