@@ -123,16 +123,24 @@ resource "aws_lb_target_group" "web_application" {
   }
 }
 
-# missing a certificate to make this work over https!
-# resource "aws_lb_listener" "web_application" {
-#   load_balancer_arn = aws_lb.web_application.arn
-#   port              = "443"
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-#   certificate_arn   = aws_acm_certificate.????.arn
+resource "aws_acm_certificate" "web_application" {
+  domain_name       = aws_lb.web_application.dns_name
+  validation_method = "DNS"
 
-#   default_action {
-#     target_group_arn = aws_lb_target_group.web_application.arn
-#     type             = "forward"
-#   }
-# }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# missing a certificate to make this work over https!
+ resource "aws_lb_listener" "web_application" {
+   load_balancer_arn = aws_lb.web_application.arn
+   port              = "443"
+   protocol          = "HTTPS"
+   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+   certificate_arn   = aws_acm_certificate.web_application.arn
+   default_action {
+     target_group_arn = aws_lb_target_group.web_application.arn
+     type             = "forward"
+   }
+ }
