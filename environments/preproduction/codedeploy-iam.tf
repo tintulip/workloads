@@ -83,7 +83,7 @@ data "aws_iam_policy_document" "codedeploy" {
   }
 
   statement {
-    sid    = "AllowPassRole"
+    sid    = "AllowCodeDeployToPassRole"
     effect = "Allow"
 
     resources = ["*"]
