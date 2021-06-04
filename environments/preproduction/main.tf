@@ -1,6 +1,7 @@
 locals {
   environment        = "preproduction"
   builder_account_id = "620540024451"
+  service_name       = "web-application"
 }
 
 data "aws_caller_identity" "preproduction" {}
@@ -15,14 +16,6 @@ module "network" {
   owner       = "platform"
   account_id  = data.aws_caller_identity.preproduction.account_id
   environment = local.environment
-}
-
-module "web_application_deployment" {
-  source       = "../../components/codedeploy"
-  role_arn     = aws_iam_role.codedeploy.arn
-  service_name = aws_ecs_service.web_application.name
-  cluster_arn  = aws_ecs_cluster.workloads.arn
-  cluster_name = aws_ecs_cluster.workloads.name
 }
 
 data "aws_iam_policy_document" "infrastructure_pipeline_trust_policy" {
@@ -108,8 +101,16 @@ resource "aws_lb" "web_application" {
   subnets            = module.network.private_subnets
 }
 
+locals {
+  target_groups = [
+    "green",
+    "blue",
+  ]
+}
+
 resource "aws_lb_target_group" "web_application" {
-  name        = "web-application"
+  count       = length(local.target_groups)
+  name        = "web-application-tg-${element(local.target_groups, count.index)}"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
@@ -133,7 +134,7 @@ resource "aws_lb_listener" "web_application" {
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
   certificate_arn   = aws_acm_certificate.web_application.arn
   default_action {
-    target_group_arn = aws_lb_target_group.web_application.arn
+    target_group_arn = aws_lb_target_group.web_application.0.arn
     type             = "forward"
   }
 }
