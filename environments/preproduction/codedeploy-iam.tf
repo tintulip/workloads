@@ -52,8 +52,8 @@ data "aws_iam_policy_document" "codedeploy" {
     actions = ["iam:PassRole"]
 
     resources = [
-      aws_iam_role.execution_role.arn,
-      aws_iam_role.task_role.arn,
+      module.web_application_deployment.execution_role_arn,
+      module.web_application_deployment.task_role_arn
     ]
   }
 
@@ -79,7 +79,7 @@ data "aws_iam_policy_document" "codedeploy" {
 
     actions = ["ecs:*"]
 
-    resources = ["*"]  
+    resources = ["*"]
   }
 
   statement {
@@ -96,7 +96,7 @@ data "aws_iam_policy_document" "codedeploy" {
       variable = "iam:PassedToService"
     }
   }
-  
+
   statement {
     sid    = "AllowPipelineToAssume"
     effect = "Allow"
@@ -114,3 +114,4 @@ resource "aws_iam_role_policy" "codedeploy" {
   role   = aws_iam_role.codedeploy.name
   policy = data.aws_iam_policy_document.codedeploy.json
 }
+

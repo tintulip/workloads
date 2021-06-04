@@ -1,14 +1,7 @@
-output "vpc_id" {
-  description = "The ID of the VPC"
-  value       = module.vpc.vpc_id
+output "execution_role_arn" {
+  value = aws_iam_role.execution_role.arn
 }
 
-output "vpc_arn" {
-  description = "The ARN of the VPC"
-  value       = module.vpc.vpc_arn
-}
-
-output "private_subnets" {
-  description = "Private subnets of VPC"
-  value       = module.vpc.private_subnets
+output "task_role_arn" {
+  value = aws_iam_role.task_role.arn
 }

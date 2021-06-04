@@ -21,7 +21,7 @@ module "web_application_deployment" {
   source       = "../../components/codedeploy"
   role_arn     = aws_iam_role.codedeploy.arn
   service_name = aws_ecs_service.web_application.name
-  cluster_arn  = aws_ecs_cluster.web_application.arn
+  cluster_arn  = aws_ecs_cluster.workloads.arn
 }
 
 data "aws_iam_policy_document" "infrastructure_pipeline_trust_policy" {
