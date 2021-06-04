@@ -17,6 +17,13 @@ module "network" {
   environment = local.environment
 }
 
+module "web_application_deployment" {
+  source       = "../../components/codedeploy"
+  role_arn     = aws_iam_role.codedeploy.arn
+  service_name = aws_ecs_service.web_application.name
+  cluster_arn  = aws_ecs_cluster.web_application.arn
+}
+
 data "aws_iam_policy_document" "infrastructure_pipeline_trust_policy" {
   statement {
     actions = ["sts:AssumeRole"]
