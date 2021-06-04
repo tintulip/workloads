@@ -56,13 +56,14 @@ resource "aws_ecs_cluster" "workloads" {
   }
 }
 
-# resource "aws_ecs_service" "web_application" {
-#   name            = "web-application"
-#   cluster         = aws_ecs_cluster.workloads.id
-#   task_definition = aws_ecs_task_definition.web_application.arn
-#   desired_count   = 3
-
-# }
+resource "aws_ecs_service" "web_application" {
+  name            = "web-application"
+  cluster         = aws_ecs_cluster.workloads.id
+  desired_count   = 3
+  deployment_controller {
+    type = "EXTERNAL"
+  }
+}
 
 # resource "aws_ecs_task_definition" "web_application" {
 #   family = "web-application"
