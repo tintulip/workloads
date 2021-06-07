@@ -149,7 +149,7 @@ resource "aws_lb_target_group" "web_application" {
   vpc_id      = module.network.vpc_id
 
   health_check {
-    path    = "/"
+    path    = "/actuator/health"
     matcher = "302,200"
   }
 
