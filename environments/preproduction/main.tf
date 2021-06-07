@@ -77,7 +77,7 @@ resource "aws_ecs_task_definition" "web_application" {
   family                   = "web-application"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 10
+  cpu                      = 512 # 0.5vCPU
   container_definitions = jsonencode([
     {
       name      = "web-application"
