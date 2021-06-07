@@ -60,15 +60,6 @@ resource "aws_ecs_service" "web_application" {
   }
 }
 
-resource "aws_ecr_repository" "web_application" {
-  name                 = local.service_name
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
 # resource "aws_ecs_task_definition" "web_application" {
 #   family = "web-application"
 #   container_definitions = jsonencode([

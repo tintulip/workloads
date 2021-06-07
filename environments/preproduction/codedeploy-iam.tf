@@ -62,17 +62,6 @@ data "aws_iam_policy_document" "codedeploy" {
     ]
   }
 
-  statement {
-    sid    = "AllowCodeBuild"
-    effect = "Allow"
-
-    actions = [
-      "codebuild:StartBuild",
-      "codebuild:BatchGetBuilds"
-    ]
-
-    resources = ["arn:aws:codebuild:eu-west-2:${local.builder_account_id}:project/web-application-deploy"]
-  }
 
   statement {
     sid    = "AllowCodeDeploy"
