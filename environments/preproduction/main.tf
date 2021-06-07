@@ -40,6 +40,7 @@ resource "aws_iam_role_policy_attachment" "infrastructure_pipeline_admin_access"
   role       = aws_iam_role.infrastructure_pipeline.name
 }
 
+# service stuff
 resource "aws_ecs_cluster" "workloads" {
   name               = "workloads"
   capacity_providers = ["FARGATE"]
@@ -51,11 +52,20 @@ resource "aws_ecs_cluster" "workloads" {
 }
 
 resource "aws_ecs_service" "web_application" {
-  name          = "web-application"
+  name          = local.service_name
   cluster       = aws_ecs_cluster.workloads.id
   desired_count = 3
   deployment_controller {
     type = "EXTERNAL"
+  }
+}
+
+resource "aws_ecr_repository" "web_application" {
+  name                 = local.service_name
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
   }
 }
 
