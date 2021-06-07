@@ -1,13 +1,7 @@
 data "aws_iam_policy_document" "assume_by_codedeploy" {
   statement {
-    sid     = ""
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["codedeploy.amazonaws.com"]
-    }
 
     principals {
       type        = "AWS"
@@ -60,23 +54,6 @@ data "aws_iam_policy_document" "codedeploy" {
       aws_iam_role.execution_role.arn,
       aws_iam_role.task_role.arn
     ]
-  }
-
-
-  statement {
-    sid    = "AllowCodeDeploy"
-    effect = "Allow"
-
-    actions = [
-      "codedeploy:CreateDeployment",
-      "codedeploy:GetApplication",
-      "codedeploy:GetApplicationRevision",
-      "codedeploy:GetDeployment",
-      "codedeploy:GetDeploymentConfig",
-      "codedeploy:RegisterApplicationRevision",
-    ]
-
-    resources = ["*"]
   }
 
   statement {
