@@ -143,7 +143,7 @@ locals {
 resource "aws_lb_target_group" "web_application" {
   count       = length(local.target_groups)
   name        = "web-application-tg-${element(local.target_groups, count.index)}"
-  port        = 80
+  port        = 8080
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = module.network.vpc_id
