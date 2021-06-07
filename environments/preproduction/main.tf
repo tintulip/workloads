@@ -145,7 +145,7 @@ resource "aws_lb_target_group" "web_application" {
   name        = "web-application-tg-${element(local.target_groups, count.index)}"
   port        = 80
   protocol    = "HTTP"
-  target_type = "instance"
+  target_type = "ip"
   vpc_id      = module.network.vpc_id
 
   health_check {
