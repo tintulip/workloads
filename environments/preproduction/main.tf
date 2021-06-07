@@ -65,7 +65,7 @@ resource "aws_ecs_service" "web_application" {
     type = "ECS"
   }
   load_balancer {
-    target_group_arn = aws_lb_target_group.web_application.0.arn
+    target_group_arn = aws_lb_target_group.web_application.arn
     container_name   = "web-application"
     container_port   = 8080
   }
@@ -133,16 +133,8 @@ resource "aws_lb" "web_application" {
   subnets            = module.network.private_subnets
 }
 
-locals {
-  target_groups = [
-    "blue",
-    "green",
-  ]
-}
-
 resource "aws_lb_target_group" "web_application" {
-  count       = length(local.target_groups)
-  name        = "web-application-tg-${element(local.target_groups, count.index)}"
+  name        = "web-application-tg"
   port        = 8080
   protocol    = "HTTP"
   target_type = "ip"
@@ -166,7 +158,7 @@ resource "aws_lb_listener" "web_application" {
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
   certificate_arn   = aws_acm_certificate.web_application.arn
   default_action {
-    target_group_arn = aws_lb_target_group.web_application.0.arn
+    target_group_arn = aws_lb_target_group.web_application.arn
     type             = "forward"
   }
 }
