@@ -59,6 +59,11 @@ resource "aws_ecs_service" "web_application" {
   deployment_controller {
     type = "CODE_DEPLOY"
   }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.web_application.arn
+    container_name   = "web-application"
+    container_port   = 80
+  }
 }
 
 
