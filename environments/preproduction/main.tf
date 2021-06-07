@@ -87,7 +87,7 @@ resource "aws_ecs_task_definition" "web_application" {
       portMappings = [
         {
           containerPort = 8080
-          hostPort      = 80
+          hostPort      = 8080
         }
       ]
     }
