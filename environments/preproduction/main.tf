@@ -52,19 +52,35 @@ resource "aws_ecs_cluster" "workloads" {
 }
 
 resource "aws_ecs_service" "web_application" {
-  name          = local.service_name
-  cluster       = aws_ecs_cluster.workloads.id
-  desired_count = 3
+  name            = local.service_name
+  cluster         = aws_ecs_cluster.workloads.id
+  task_definition = aws_ecs_task_definition.web_application.arn
+  desired_count   = 3
   deployment_controller {
     type = "CODE_DEPLOY"
   }
 }
 
-# resource "aws_ecs_task_definition" "web_application" {
-#   family = "web-application"
-#   container_definitions = jsonencode([
-#   ])
-# }
+
+
+resource "aws_ecs_task_definition" "web_application" {
+  family = "web-application"
+  container_definitions = jsonencode([
+    {
+      name      = "web-application"
+      image     = "${data.aws_caller_identity.preproduction.account_id}.dkr.ecr.eu-west-2.amazonaws.com/web-application:latest"
+      cpu       = 10
+      memory    = 512
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8080
+          hostPort      = 80
+        }
+      ]
+    }
+  ])
+}
 
 # the networking stuff needs to go here:
 # speculating wildly
