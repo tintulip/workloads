@@ -152,7 +152,7 @@ resource "aws_lb_listener" "web_application" {
 # DNS stuff
 
 locals {
-  dns_domain  = "tintulip-scenario1.net"
+  dns_domain               = "tintulip-scenario1.net"
   web_application_hostname = "www.${local.dns_domain}"
 }
 
