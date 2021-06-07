@@ -59,7 +59,7 @@ resource "aws_ecs_service" "web_application" {
   launch_type     = "FARGATE"
   network_configuration {
     subnets         = module.network.private_subnets
-    security_groups = [aws_security_group.web_application_sg.id]
+    security_groups = [aws_security_group.web_application_service_sg.id]
   }
   deployment_controller {
     type = "ECS"
@@ -107,9 +107,9 @@ resource "aws_ecs_task_definition" "web_application" {
 # we can then add the load balancer into that security group, and do other networking to expose it?
 # so... because we need to connect to a load of external VPC networking we'll set that up first
 
-resource "aws_security_group" "web_application_sg" {
-  name        = "web_application_sg"
-  description = "Allow http traffic for tin tulip scenario 1 web application"
+resource "aws_security_group" "web_application_lb_sg" {
+  name        = "web_application_lb_sg"
+  description = "Allow http traffic for tin tulip scenario 1 web application on the load balancer"
   vpc_id      = module.network.vpc_id
   ingress {
     from_port   = 443
@@ -125,11 +125,29 @@ resource "aws_security_group" "web_application_sg" {
   }
 }
 
+resource "aws_security_group" "web_application_service_sg" {
+  name        = "web_application_service_sg"
+  description = "Allow http traffic for tin tulip scenario 1 web application service"
+  vpc_id      = module.network.vpc_id
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_lb" "web_application" {
   name               = "web-application"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.web_application_sg.id]
+  security_groups    = [aws_security_group.web_application_lb_sg.id]
   subnets            = module.network.private_subnets
 }
 
