@@ -77,11 +77,11 @@ resource "aws_ecs_task_definition" "web_application" {
   family                   = "web-application"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
+  cpu                      = 10
   container_definitions = jsonencode([
     {
       name      = "web-application"
       image     = "${data.aws_caller_identity.preproduction.account_id}.dkr.ecr.eu-west-2.amazonaws.com/web-application:latest"
-      cpu       = 10
       memory    = 512
       essential = true
       portMappings = [
