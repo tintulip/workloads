@@ -56,7 +56,7 @@ resource "aws_ecs_service" "web_application" {
   cluster       = aws_ecs_cluster.workloads.id
   desired_count = 3
   deployment_controller {
-    type = "EXTERNAL"
+    type = "CODE_DEPLOY"
   }
 }
 
