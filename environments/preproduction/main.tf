@@ -56,6 +56,7 @@ resource "aws_ecs_service" "web_application" {
   cluster         = aws_ecs_cluster.workloads.id
   task_definition = aws_ecs_task_definition.web_application.arn
   desired_count   = 3
+  launch_type = "FARGATE"
   deployment_controller {
     type = "CODE_DEPLOY"
   }
@@ -70,6 +71,7 @@ resource "aws_ecs_service" "web_application" {
 
 resource "aws_ecs_task_definition" "web_application" {
   family = "web-application"
+  requires_compatibilities = [ "FARGATE" ]
   container_definitions = jsonencode([
     {
       name      = "web-application"
