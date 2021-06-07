@@ -125,8 +125,8 @@ resource "aws_lb" "web_application" {
 
 locals {
   target_groups = [
-    "green",
     "blue",
+    "green",
   ]
 }
 
