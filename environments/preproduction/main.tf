@@ -62,7 +62,7 @@ resource "aws_ecs_service" "web_application" {
     security_groups = [aws_security_group.web_application_sg.id]
   }
   deployment_controller {
-    type = "CODE_DEPLOY"
+    type = "ECS"
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.web_application.0.arn
