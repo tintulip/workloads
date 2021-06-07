@@ -143,7 +143,7 @@ resource "aws_lb_listener" "web_application" {
 
 locals {
   dns_domain  = "tintulip-scenario1.net"
-  web_application_hostname = "www.${local.dns_first_level}"
+  web_application_hostname = "www.${local.dns_domain}"
 }
 
 resource "aws_route53_zone" "tintulip_scenario1" {
