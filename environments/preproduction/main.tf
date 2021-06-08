@@ -96,8 +96,9 @@ resource "aws_ecs_task_definition" "web_application" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-region = "eu-west-2"
-          awslogs-group  = "web-application"
+          awslogs-region        = "eu-west-2"
+          awslogs-group         = "web-application"
+          awslogs-stream-prefix = "workloads"
         }
       }
     }
