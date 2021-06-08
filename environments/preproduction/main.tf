@@ -158,7 +158,7 @@ resource "aws_lb" "web_application" {
   subnets            = module.network.public_subnets
 
   drop_invalid_header_fields = true
-  enable_delete_protection   = true
+  enable_deletion_protection = true
 }
 
 resource "aws_lb_target_group" "web_application" {
