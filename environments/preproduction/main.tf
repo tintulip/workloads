@@ -156,6 +156,9 @@ resource "aws_lb" "web_application" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.web_application_lb_sg.id]
   subnets            = module.network.public_subnets
+
+  drop_invalid_header_fields = true
+  enable_delete_protection   = true
 }
 
 resource "aws_lb_target_group" "web_application" {
