@@ -110,15 +110,15 @@ data "aws_iam_policy_document" "execution_role" {
   }
 
   statement {
-    sid    = "AllowLogging"
-    effect = "Allow"
-
     actions = [
+      "logs:CreateLogGroup",
       "logs:CreateLogStream",
-      "logs:PutLogEvents",
+      "logs:PutLogEvents"
     ]
 
-    resources = ["*"]
+    resources = [
+      "*"
+    ]
   }
 }
 
@@ -130,6 +130,17 @@ data "aws_iam_policy_document" "task_role" {
     actions = ["ecs:DescribeClusters"]
 
     resources = [aws_ecs_cluster.workloads.arn]
+  }
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+
+    resources = [
+      "*"
+    ]
   }
 }
 
