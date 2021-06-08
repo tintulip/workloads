@@ -105,6 +105,15 @@ resource "aws_ecs_task_definition" "web_application" {
   ])
 }
 
+resource "aws_cloudwatch_log_group" "web_application" {
+  name = "web-application"
+
+  tags = {
+    Environment = "preproduction"
+    Application = "web-application"
+  }
+}
+
 resource "aws_security_group" "web_application_lb_sg" {
   name        = "web_application_lb_sg"
   description = "Allow http traffic for tin tulip scenario 1 web application on the load balancer"
