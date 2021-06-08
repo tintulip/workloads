@@ -64,21 +64,6 @@ data "aws_iam_policy_document" "codedeploy" {
 
     resources = ["*"]
   }
-
-  statement {
-    sid    = "AllowCodeDeployToPassRole"
-    effect = "Allow"
-
-    resources = ["*"]
-
-    actions = ["iam:PassRole"]
-
-    condition {
-      test     = "StringLike"
-      values   = ["ecs-tasks.amazonaws.com"]
-      variable = "iam:PassedToService"
-    }
-  }
 }
 
 resource "aws_iam_role_policy" "codedeploy" {
