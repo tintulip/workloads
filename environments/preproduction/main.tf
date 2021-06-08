@@ -85,7 +85,7 @@ resource "aws_ecs_task_definition" "web_application" {
     {
       name      = "web-application"
       image     = "${data.aws_caller_identity.preproduction.account_id}.dkr.ecr.eu-west-2.amazonaws.com/web-application:latest"
-      memory    = 512
+      memory    = 1024
       essential = true
       portMappings = [
         {
@@ -93,6 +93,13 @@ resource "aws_ecs_task_definition" "web_application" {
           hostPort      = 8080
         }
       ]
+      logConfiguration = {
+        logDriver = "awsLogs"
+        options = {
+          awslogs-region = "eu-west-2"
+          awslogs-group  = "web-application"
+        }
+      }
     }
   ])
 }
