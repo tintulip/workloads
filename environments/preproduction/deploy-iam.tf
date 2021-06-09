@@ -15,6 +15,7 @@ resource "aws_iam_role" "codedeploy" {
   assume_role_policy = data.aws_iam_policy_document.assume_by_codedeploy.json
 }
 
+#checkov:skip=CKV_AWS_111: FIXME this being broad is intentional for now. #85 raised to follow up.
 data "aws_iam_policy_document" "codedeploy" {
   statement {
     sid    = "AllowLoadBalancingAndECSModifications"
@@ -71,6 +72,7 @@ resource "aws_iam_role_policy" "codedeploy" {
   policy = data.aws_iam_policy_document.codedeploy.json
 }
 
+#checkov:skip=CKV_AWS_111: FIXME this might be locked down to a specific repo - we have the id. #85 raised to follow up.
 data "aws_iam_policy_document" "execution_role" {
   statement {
     sid    = "AllowECRPull"
@@ -107,6 +109,7 @@ data "aws_iam_policy_document" "execution_role" {
   }
 }
 
+#checkov:skip=CKV_AWS_111: FIXME look into this - can we even be specific in this case?. #85 raised to follow up.
 data "aws_iam_policy_document" "task_role" {
   statement {
     sid    = "AllowDescribeCluster"

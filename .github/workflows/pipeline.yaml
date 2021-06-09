@@ -33,14 +33,14 @@ jobs:
       with:
         terraform_version: ${{ env.tf_version }}
 
-    # - name: Terraform Format
-    #   run: terraform fmt -check -recursive
+    - name: Terraform Format
+      run: terraform -chdir=environments/preproduction fmt -check -recursive
 
-    # - name: Terraform Init
-    #   run: terraform init
+    - name: Terraform Init
+      run: terraform -chdir=environments/preproduction init -backend=false
 
-    # - name: Terraform Validate
-    #   run: terraform validate -no-color
+    - name: Terraform Validate
+      run: terraform -chdir=environments/preproduction validate -no-color
 
   send-to-builder:
     if: ${{ github.ref == 'refs/heads/main' }}
