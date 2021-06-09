@@ -1,7 +1,9 @@
 locals {
-  environment        = "preproduction"
-  builder_account_id = "620540024451"
-  service_name       = "web-application"
+  environment             = "preproduction"
+  builder_account_id      = "620540024451"
+  service_name            = "web-application"
+  access_logs_prefix      = "web_application_lb"
+  access_logs_bucket_name = "access-logs"
 }
 
 data "aws_caller_identity" "preproduction" {}
@@ -165,6 +167,12 @@ resource "aws_lb" "web_application" {
 
   drop_invalid_header_fields = true
   enable_deletion_protection = true
+
+  access_logs {
+    bucket  = aws_s3_bucket.access_logs.bucket
+    prefix  = local.access_logs_prefix
+    enabled = true
+  }
 }
 
 resource "aws_lb_target_group" "web_application" {
@@ -246,5 +254,71 @@ resource "aws_route53_record" "web_application" {
     name                   = aws_lb.web_application.dns_name
     zone_id                = aws_lb.web_application.zone_id
     evaluate_target_health = true
+  }
+}
+
+resource "aws_s3_bucket" "access_logs" {
+  #checkov:skip=CKV_AWS_52:Bucket is created by a pipeline
+  #checkov:skip=CKV_AWS_18:Access logging needs to go into a cross account bucket
+  #checkov:skip=CKV_AWS_144:Not required to have cross region enabled
+  #checkov:skip=CKV_AWS_145:Cannot use KMS for cross-account log replication
+  bucket = local.access_logs_bucket_name
+  acl    = "private"
+  policy = data.aws_iam_policy_document.access_logs.json
+
+  versioning {
+    enabled = true
+  }
+
+  lifecycle_rule {
+    id      = "log-expire"
+    enabled = true
+
+    tags = {
+      rule      = "log-expire"
+      autoclean = "true"
+    }
+
+    expiration {
+      days = 30
+    }
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "access_logs" {
+  bucket = aws_s3_bucket.access_logs.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+data "aws_elb_service_account" "elb" {}
+
+data "aws_iam_policy_document" "access_logs" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_elb_service_account.elb.arn]
+    }
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${local.access_logs_bucket_name}/${local.access_logs_prefix}/AWSLogs/*",
+    ]
   }
 }
