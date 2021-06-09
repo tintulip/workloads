@@ -1,6 +1,7 @@
 resource "aws_ecr_repository" "web_application" {
+  #checkov:skip=CKV_AWS_136: no kms for now - #86 to follow up
   name                 = local.service_name
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
     scan_on_push = true

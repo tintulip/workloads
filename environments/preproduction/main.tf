@@ -106,8 +106,10 @@ resource "aws_ecs_task_definition" "web_application" {
 }
 
 
-#checkov:skip=CKV_AWS_158: FIXME no kms on this for now. #86 to follow up
 resource "aws_cloudwatch_log_group" "web_application" {
+
+  #checkov:skip=CKV_AWS_158: FIXME no kms on this for now. #86 to follow up
+
   name = "web-application"
 
   retention_in_days = 30
