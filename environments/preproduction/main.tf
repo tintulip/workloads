@@ -122,6 +122,7 @@ resource "aws_cloudwatch_log_group" "web_application" {
   }
 }
 
+#tfsec:ignore:AWS008
 resource "aws_security_group" "web_application_lb_sg" {
   name        = "web_application_lb_sg"
   description = "Allow http traffic for tin tulip scenario 1 web application on the load balancer"
@@ -132,12 +133,6 @@ resource "aws_security_group" "web_application_lb_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 resource "aws_security_group" "web_application_service_sg" {
@@ -145,19 +140,14 @@ resource "aws_security_group" "web_application_service_sg" {
   description = "Allow http traffic for tin tulip scenario 1 web application service"
   vpc_id      = module.network.vpc_id
   ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.web_application_lb_sg.id]
   }
 }
 
+#tfsec:ignore:AWS005
 resource "aws_lb" "web_application" {
   name               = "web-application"
   internal           = false
