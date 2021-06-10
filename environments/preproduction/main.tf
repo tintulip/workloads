@@ -1,12 +1,12 @@
+data "aws_caller_identity" "preproduction" {}
+
 locals {
   environment             = "preproduction"
   builder_account_id      = "620540024451"
   service_name            = "web-application"
   access_logs_prefix      = "web_application_lb"
-  access_logs_bucket_name = "access-logs"
+  access_logs_bucket_name = "access-logs-${data.aws_caller_identity.preproduction.account_id}"
 }
-
-data "aws_caller_identity" "preproduction" {}
 
 module "state_bucket" {
   source      = "../../module-template/remote-state-bucket"

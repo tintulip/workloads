@@ -24,7 +24,7 @@ jobs:
     - name: checkov-action
       uses: bridgecrewio/checkov-action@master
       with:
-        directory: .
+        directory: environments/preproduction
         quiet: true
         framework: terraform
 
