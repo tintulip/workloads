@@ -53,7 +53,7 @@ resource "aws_db_instance" "web_application_db" {
   engine_version                  = "13"
   auto_minor_version_upgrade      = true
   instance_class                  = "db.t3.micro"
-  name                            = "web-application-db"
+  name                            = "web_application_db"
   username                        = "postgres"
   password                        = aws_secretsmanager_secret_version.secret_version.secret_string
   vpc_security_group_ids          = [aws_security_group.web_application_database_sg.id]
