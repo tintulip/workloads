@@ -69,7 +69,7 @@ resource "aws_iam_service_linked_role" "rds" {
 }
 
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  name_prefix        = "rds-enhanced-monitoring-"
+  name_prefix        = "rds_enhanced_monitoring-"
   assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring.json
 }
 
