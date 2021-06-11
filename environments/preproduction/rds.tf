@@ -44,6 +44,7 @@ resource "aws_kms_key" "rds_secret" {
   enable_key_rotation     = true
 }
 
+checkov:skip=CKV_AWS_161
 resource "aws_db_instance" "web_application_db" {
   allocated_storage               = 10
   engine                          = "postgres"
@@ -58,8 +59,35 @@ resource "aws_db_instance" "web_application_db" {
   storage_encrypted               = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
   monitoring_interval             = 60
+  multi_az                        = true 
+  monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
 }
 
 resource "aws_iam_service_linked_role" "rds" {
   aws_service_name = "rds.amazonaws.com"
+}
+
+resource "aws_iam_role" "rds_enhanced_monitoring" {
+  name_prefix        = "rds-enhanced-monitoring-"
+  assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring.json
+}
+
+resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
+  role       = aws_iam_role.rds_enhanced_monitoring.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
+
+data "aws_iam_policy_document" "rds_enhanced_monitoring" {
+  statement {
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["monitoring.rds.amazonaws.com"]
+    }
+  }
 }
