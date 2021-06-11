@@ -62,7 +62,7 @@ resource "aws_db_instance" "web_application_db" {
   monitoring_interval             = 60
   multi_az                        = true
   monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
-  license_model                   = "license-included"
+  license_model                   = "postgresql-license"
 
 }
 
