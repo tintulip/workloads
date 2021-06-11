@@ -44,7 +44,7 @@ resource "aws_kms_key" "rds_secret" {
   enable_key_rotation     = true
 }
 
-checkov:skip=CKV_AWS_161
+#checkov:skip=CKV_AWS_161
 resource "aws_db_instance" "web_application_db" {
   allocated_storage               = 10
   engine                          = "postgres"
