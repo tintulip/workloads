@@ -57,7 +57,7 @@ resource "aws_db_instance" "web_application_db" {
   username                        = "postgres"
   password                        = aws_secretsmanager_secret_version.secret_version.secret_string
   vpc_security_group_ids          = [aws_security_group.web_application_database_sg.id]
-  db_subnet_group_name            = aws_db_subnet_group.db_subnet_group
+  db_subnet_group_name            = aws_db_subnet_group.db_subnet_group.name
   storage_encrypted               = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
   monitoring_interval             = 60
