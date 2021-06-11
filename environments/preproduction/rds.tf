@@ -48,21 +48,21 @@ resource "aws_kms_key" "rds_secret" {
 resource "aws_db_instance" "web_application_db" {
   #checkov:skip=CKV_AWS_161:don't want to have IAM authentication enabled for now
 
-  allocated_storage                   = 10
-  engine                              = "postgres"
-  engine_version                      = "13"
-  auto_minor_version_upgrade          = true
-  instance_class                      = "db.t3.micro"
-  name                                = "web-application-db"
-  username                            = "postgres"
-  password                            = aws_secretsmanager_secret_version.secret_version.secret_string
-  vpc_security_group_ids              = [aws_security_group.web_application_database_sg.id]
-  db_subnet_group_name                = aws_db_subnet_group.db_subnet_group
-  storage_encrypted                   = true
-  enabled_cloudwatch_logs_exports     = ["postgresql", "upgrade"]
-  monitoring_interval                 = 60
-  multi_az                            = true
-  monitoring_role_arn                 = aws_iam_role.rds_enhanced_monitoring.arn
+  allocated_storage               = 10
+  engine                          = "postgres"
+  engine_version                  = "13"
+  auto_minor_version_upgrade      = true
+  instance_class                  = "db.t3.micro"
+  name                            = "web-application-db"
+  username                        = "postgres"
+  password                        = aws_secretsmanager_secret_version.secret_version.secret_string
+  vpc_security_group_ids          = [aws_security_group.web_application_database_sg.id]
+  db_subnet_group_name            = aws_db_subnet_group.db_subnet_group
+  storage_encrypted               = true
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+  monitoring_interval             = 60
+  multi_az                        = true
+  monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
 }
 
 resource "aws_iam_service_linked_role" "rds" {
