@@ -62,7 +62,7 @@ resource "aws_db_instance" "web_application_db" {
   monitoring_interval             = 60
   multi_az                        = true
   monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
-  kms_key_id                      = aws_kms_key.rds_secret.arn
+  license_model                   = "license-included"
 
 }
 
