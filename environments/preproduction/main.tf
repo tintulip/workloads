@@ -86,7 +86,7 @@ resource "aws_ecs_task_definition" "web_application" {
   container_definitions = jsonencode([
     {
       name      = "web-application"
-      image     = "${data.aws_caller_identity.preproduction.account_id}.dkr.ecr.eu-west-2.amazonaws.com/web-application:latest"
+      image     = "${data.aws_caller_identity.preproduction.account_id}.dkr.ecr.eu-west-2.amazonaws.com/web-application"
       memory    = 1024
       essential = true
       portMappings = [
