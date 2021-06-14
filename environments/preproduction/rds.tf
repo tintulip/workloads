@@ -64,10 +64,8 @@ resource "aws_db_instance" "web_application_db" {
   monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
   license_model                   = "postgresql-license"
   identifier                      = "workloads"
-  skip_final_snapshot             = false
+  skip_final_snapshot             = true
   final_snapshot_identifier       = "workloads-snapshot"
-
-
 }
 
 resource "aws_iam_service_linked_role" "rds" {
