@@ -63,7 +63,7 @@ resource "aws_db_instance" "web_application_db" {
   multi_az                        = true
   monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
   license_model                   = "postgresql-license"
-
+  identifier                      = "workloads"
 }
 
 resource "aws_iam_service_linked_role" "rds" {
