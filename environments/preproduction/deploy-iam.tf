@@ -111,6 +111,17 @@ data "aws_iam_policy_document" "execution_role" {
       "*"
     ]
   }
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "kms:Decrypt"
+    ]
+
+    resources = [
+      aws_secretsmanager_secret.db_password.arn,
+      aws_kms_key.rds_secret.arn
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "task_role" {
