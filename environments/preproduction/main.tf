@@ -95,6 +95,26 @@ resource "aws_ecs_task_definition" "web_application" {
           hostPort      = 8080
         }
       ]
+
+      environment = [
+        {
+          name  = "SPRING_DATASOURCE_URL"
+          value = "jdbc:postgresql://${aws_db_instance.web_application_db.endpoint}/${aws_db_instance.web_application_db.name}"
+        },
+        {
+          name  = "SPRING_DATASOURCE_USERNAME"
+          value = aws_db_instance.web_application_db.username
+        },
+      ]
+
+      secrets = [
+        {
+          name      = "SPRING_DATASOURCE_PASSWORD"
+          valueFrom = aws_secretsmanager_secret.db_password.arn
+
+        },
+      ]
+
       logConfiguration = {
         logDriver = "awslogs"
         options = {
