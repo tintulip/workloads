@@ -110,7 +110,7 @@ resource "aws_ecs_task_definition" "web_application" {
       secrets = [
         {
           name      = "SPRING_DATASOURCE_PASSWORD"
-          valueFrom = aws_secretsmanager_secret.db_password.arn
+          valueFrom = "arn:aws:secretsmanager:eu-west-2:961889248176:secret:db_password"
 
         },
       ]
