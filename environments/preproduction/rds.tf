@@ -59,6 +59,7 @@ resource "aws_db_instance" "web_application_db" {
   db_subnet_group_name            = aws_db_subnet_group.db_subnet_group.name
   storage_encrypted               = true
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+  backup_retention_period         = 7
   monitoring_interval             = 60
   multi_az                        = true
   monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
