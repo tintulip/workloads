@@ -21,6 +21,11 @@ module "vpc" {
     Name = "${var.vpc_name}-public"
   }
 
+  enable_flow_log                      = true
+  create_flow_log_cloudwatch_log_group = true
+  create_flow_log_cloudwatch_iam_role  = true
+  flow_log_max_aggregation_interval    = 60
+
   tags = {
     Owner       = var.owner
     Environment = var.environment
