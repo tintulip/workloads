@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  tf_version: 0.15.4
+  tf_version: 1.0.0
 
 jobs:
   terraform_checks:
