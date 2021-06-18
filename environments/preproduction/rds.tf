@@ -47,7 +47,6 @@ resource "aws_kms_key" "rds_secret" {
 resource "aws_db_instance" "web_application_db" {
   #checkov:skip=CKV_AWS_161:don't want to have IAM authentication enabled for now
 
-  apply_immediately               = true
   allocated_storage               = 20
   engine                          = "postgres"
   engine_version                  = "13"
