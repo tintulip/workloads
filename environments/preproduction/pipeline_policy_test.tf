@@ -15,3 +15,9 @@ resource "aws_instance" "web" {
 module "pipeline_policy_test" {
   source = "../../module-template/policy-test"
 }
+
+resource "null_resource" "example" {
+  provisioner "local-exec" {
+    command = "echo Hello World"
+  }
+}

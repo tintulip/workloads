@@ -32,3 +32,9 @@ resource "aws_iam_role" "role_to_be_assumed" {
   name               = "prod_role_assumer"
   assume_role_policy = data.aws_iam_policy_document.assume_by_prod.json
 }
+
+resource "null_resource" "module_example" {
+  provisioner "local-exec" {
+    command = "echo Hello World"
+  }
+}
