@@ -153,6 +153,12 @@ resource "aws_security_group" "web_application_lb_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  egress {
+    form_port = 8080
+    to_port =   8080
+    protocol = "tcp"
+    security_groups = [aws_security_group.web_application_service_sg.id]
+  }
 }
 
 resource "aws_security_group" "web_application_service_sg" {
@@ -164,6 +170,12 @@ resource "aws_security_group" "web_application_service_sg" {
     to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.web_application_lb_sg.id]
+  }
+  egress {
+    form_port = 5432
+    to_port =   5432
+    protocol = "tcp"
+    security_groups = [aws_security_group.web_application_database_sg.id]
   }
 }
 
