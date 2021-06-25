@@ -142,6 +142,15 @@ resource "aws_cloudwatch_log_group" "web_application" {
   }
 }
 
+resource "aws_security_group_rule" "allow_lb_service" {
+  type                     = "egress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.web_application_lb_sg.id
+  source_security_group_id = aws_security_group.web_application_service_sg.id
+}
+
 #tfsec:ignore:AWS008
 resource "aws_security_group" "web_application_lb_sg" {
   name        = "web_application_lb_sg"
@@ -154,11 +163,28 @@ resource "aws_security_group" "web_application_lb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
-    form_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web_application_service_sg.id]
+    from_port = 8080
+    to_port   = 8080
+    protocol  = "tcp"
   }
+}
+
+resource "aws_security_group_rule" "allow_service_database" {
+  type                     = "egress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.web_application_service_sg.id
+  source_security_group_id = aws_security_group.web_application_database_sg.id
+}
+
+resource "aws_security_group_rule" "allow_service_lb" {
+  type                     = "ingress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.web_application_service_sg.id
+  source_security_group_id = aws_security_group.web_application_lb_sg.id
 }
 
 resource "aws_security_group" "web_application_service_sg" {
@@ -166,16 +192,14 @@ resource "aws_security_group" "web_application_service_sg" {
   description = "Allow http traffic for tin tulip scenario 1 web application service"
   vpc_id      = module.network.vpc_id
   ingress {
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web_application_lb_sg.id]
+    from_port = 8080
+    to_port   = 8080
+    protocol  = "tcp"
   }
   egress {
-    form_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web_application_database_sg.id]
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
   }
 }
 
