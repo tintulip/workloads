@@ -1,6 +1,7 @@
 resource "aws_kms_key" "state_bucket_key" {
   description             = "KMS key for the state bucket"
   deletion_window_in_days = 10
+  enable_key_rotation     = true
 }
 
 
@@ -27,6 +28,10 @@ data "aws_iam_policy_document" "upload_to_bucket" {
 
 
 resource "aws_s3_bucket" "state_bucket" {
+  #checkov:skip=CKV_AWS_144:Not required to have cross region enabled
+  #checkov:skip=CKV_AWS_18:currently cannot send access logs anywhere
+  #checkov:skip=CKV_AWS_52:Cannot enable mfa_delete when applying with SSO
+  #tfsec:ignore:AWS002
   bucket        = var.bucket_name
   force_destroy = "true"
 
