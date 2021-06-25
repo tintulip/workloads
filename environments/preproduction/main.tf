@@ -15,7 +15,7 @@ module "state_bucket" {
 
 module "kms_bucket" {
   source      = "../../module-template/kms-state-bucket"
-  bucket_name = "prepod_state_bucket"
+  bucket_name = "preproduction"
 }
 
 module "network" {

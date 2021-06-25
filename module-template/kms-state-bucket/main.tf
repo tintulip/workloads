@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_kms_key" "state_bucket_key" {
   description             = "KMS key for the state bucket"
   deletion_window_in_days = 10
@@ -32,7 +34,7 @@ resource "aws_s3_bucket" "state_bucket" {
   #checkov:skip=CKV_AWS_18:currently cannot send access logs anywhere
   #checkov:skip=CKV_AWS_52:Cannot enable mfa_delete when applying with SSO
   #tfsec:ignore:AWS002
-  bucket        = var.bucket_name
+  bucket        = "tfstate-${data.aws_caller_identity.account_id}-${var.bucket_name}"
   force_destroy = "true"
 
 
