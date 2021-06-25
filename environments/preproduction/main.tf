@@ -13,6 +13,11 @@ module "state_bucket" {
   bucket_name = "cla-${local.environment}-state"
 }
 
+module "kms_bucket" {
+  source      = "../../module-template/kms-state-bucket"
+  bucket_name = "prepod_state_bucket"
+}
+
 module "network" {
   source      = "../../components/networking"
   owner       = "platform"
@@ -40,6 +45,11 @@ resource "aws_iam_role" "infrastructure_pipeline" {
 resource "aws_iam_role_policy_attachment" "infrastructure_pipeline_admin_access" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
   role       = aws_iam_role.infrastructure_pipeline.name
+}
+
+resource "aws_iam_role_policy" "state_bucket_access" {
+  policy = module.kms_bucket.policy_document
+  role   = aws_iam_role.infrastructure_pipeline.name
 }
 
 # service stuff
