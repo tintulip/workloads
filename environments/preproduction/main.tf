@@ -156,22 +156,20 @@ resource "aws_security_group_rule" "allow_lb_service" {
   source_security_group_id = aws_security_group.web_application_service_sg.id
 }
 
+resource "aws_security_group_rule" "allow_lb_ingress" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.web_application_lb_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 #tfsec:ignore:AWS008
 resource "aws_security_group" "web_application_lb_sg" {
   name        = "web_application_lb_sg"
   description = "Allow http traffic for tin tulip scenario 1 web application on the load balancer"
   vpc_id      = module.network.vpc_id
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port = 8080
-    to_port   = 8080
-    protocol  = "tcp"
-  }
 }
 
 resource "aws_security_group_rule" "allow_service_database" {
@@ -192,20 +190,11 @@ resource "aws_security_group_rule" "allow_service_lb" {
   source_security_group_id = aws_security_group.web_application_lb_sg.id
 }
 
+
 resource "aws_security_group" "web_application_service_sg" {
   name        = "web_application_service_sg"
   description = "Allow http traffic for tin tulip scenario 1 web application service"
   vpc_id      = module.network.vpc_id
-  ingress {
-    from_port = 8080
-    to_port   = 8080
-    protocol  = "tcp"
-  }
-  egress {
-    from_port = 5432
-    to_port   = 5432
-    protocol  = "tcp"
-  }
 }
 
 #tfsec:ignore:AWS005
