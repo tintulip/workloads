@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket   = "cla-preproduction-state"
+    bucket   = "tfstate-961889248176-preproduction"
     key      = "pipeline-factory/preproduction.tfstate"
     region   = "eu-west-2"
     role_arn = "arn:aws:iam::961889248176:role/infrastructure_pipeline"
