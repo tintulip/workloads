@@ -6,6 +6,10 @@ resource "aws_kms_key" "state_bucket_key" {
   enable_key_rotation     = true
 }
 
+resource "aws_kms_alias" "state_bucket_key" {
+  name          = "alias/prepod_state_bucket"
+  target_key_id = aws_kms_key.state_bucket_key.key_id
+}
 
 data "aws_iam_policy_document" "upload_to_bucket" {
   statement {
