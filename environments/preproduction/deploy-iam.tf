@@ -154,7 +154,7 @@ data "aws_iam_policy_document" "task_role" {
     ]
 
     resources = [
-      "arn:aws:secretsmanager:eu-west-2:961889248176:secret:db_password*",
+      aws_secretsmanager_secret.db_password.arn,
       aws_kms_key.rds_secret.arn
     ]
   }
