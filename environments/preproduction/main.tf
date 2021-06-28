@@ -8,11 +8,6 @@ locals {
   access_logs_bucket_name = "access-logs-${data.aws_caller_identity.preproduction.account_id}"
 }
 
-module "state_bucket" {
-  source      = "../../module-template/remote-state-bucket"
-  bucket_name = "cla-${local.environment}-state"
-}
-
 module "kms_bucket" {
   source      = "../../module-template/kms-state-bucket"
   bucket_name = "preproduction"
