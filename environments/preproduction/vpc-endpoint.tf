@@ -33,6 +33,10 @@ resource "aws_vpc_endpoint_route_table_association" "private_s3" {
   route_table_id  = data.aws_route_table.private.route_table_id
 }
 
+data "aws_prefix_list" "private_s3" {
+  prefix_list_id = aws_vpc_endpoint.s3.prefix_list_id
+}
+
 data "aws_vpc_endpoint_service" "secretsmanager" {
   service = "secretsmanager"
 }
