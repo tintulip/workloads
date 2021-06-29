@@ -205,7 +205,7 @@ resource "aws_security_group_rule" "allow_service_https_to_s3" {
   to_port           = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.web_application_service_sg.id
-  prefix_list_ids   = data.aws_prefix_list.private_s3.id
+  prefix_list_ids   = [data.aws_prefix_list.private_s3.id]
 }
 
 resource "aws_security_group" "web_application_service_sg" {
