@@ -13,6 +13,26 @@ resource "aws_security_group" "services_to_vpc_endpoints" {
   vpc_id      = module.network.vpc_id
 }
 
+data "aws_vpc_endpoint_service" "s3" {
+  service_type = "Gateway"
+  service      = "s3"
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = module.network.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.s3.service_name
+  vpc_endpoint_type = "Gateway"
+}
+
+data "aws_route_table" "private" {
+  subnet_id = element(module.network.private_subnets, 0)
+}
+
+resource "aws_vpc_endpoint_route_table_association" "private_s3" {
+  vpc_endpoint_id = aws_vpc_endpoint.s3.id
+  route_table_id  = data.aws_route_table.private.route_table_id
+}
+
 data "aws_vpc_endpoint_service" "secretsmanager" {
   service = "secretsmanager"
 }
