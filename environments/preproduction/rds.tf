@@ -67,6 +67,10 @@ resource "aws_db_instance" "web_application_db" {
   identifier                      = "workloads"
   skip_final_snapshot             = true
   final_snapshot_identifier       = "workloads-snapshot"
+
+  lifecycle {
+    ignore_changes = ["latest_restorable_time"]
+  }
 }
 
 resource "aws_iam_service_linked_role" "rds" {
