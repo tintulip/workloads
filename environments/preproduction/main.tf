@@ -190,20 +190,25 @@ resource "aws_vpc_endpoint" "ssm" {
   service_name      = data.aws_vpc_endpoint_service.ssm.service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = [aws_security_group.web_application_service_sg.id]
+  security_group_ids = [aws_security_group.services_to_ssm.id]
   subnet_ids         = module.network.private_subnets
 
   private_dns_enabled = true
 }
 
-# resource "aws_security_group_rule" "allow_service_egress" {
-#   type              = "egress"
-#   from_port         = 443
-#   to_port           = 443
-#   protocol          = "tcp"
-#   security_group_id = aws_security_group.web_application_service_sg.id
-#   cidr_blocks       = ["0.0.0.0/0"]
-# }
+resource "aws_security_group_rule" "allow_service_egress" {
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.services_to_ssm.id
+}
+
+resource "aws_security_group" "services_to_ssm" {
+  name        = "services_to_ssm"
+  description = "Allow egress traffic to ssm"
+  vpc_id      = module.network.vpc_id
+}
 
 resource "aws_security_group_rule" "allow_service_lb" {
   type                     = "ingress"
