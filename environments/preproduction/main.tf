@@ -191,7 +191,7 @@ resource "aws_vpc_endpoint" "ssm" {
   vpc_endpoint_type = "Interface"
 
   security_group_ids = [aws_security_group.web_application_service_sg.id]
-  subnet_ids         = [module.network.private_subnets]
+  subnet_ids         = module.network.private_subnets
 }
 
 # resource "aws_security_group_rule" "allow_service_egress" {
