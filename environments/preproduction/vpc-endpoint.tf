@@ -28,6 +28,21 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   private_dns_enabled = true
 }
 
+data "aws_vpc_endpoint_service" "ecr_api" {
+  service = "ecr.api"
+}
+
+resource "aws_vpc_endpoint" "ecr_api" {
+  vpc_id            = module.network.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ecr_api.service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [aws_security_group.services_to_vpc_endpoints.id]
+  subnet_ids         = module.network.private_subnets
+
+  private_dns_enabled = true
+}
+
 data "aws_vpc_endpoint_service" "ecr_dkr" {
   service = "ecr.dkr"
 }
@@ -35,6 +50,21 @@ data "aws_vpc_endpoint_service" "ecr_dkr" {
 resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_id            = module.network.vpc_id
   service_name      = data.aws_vpc_endpoint_service.ecr_dkr.service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [aws_security_group.services_to_vpc_endpoints.id]
+  subnet_ids         = module.network.private_subnets
+
+  private_dns_enabled = true
+}
+
+data "aws_vpc_endpoint_service" "logs" {
+  service = "logs"
+}
+
+resource "aws_vpc_endpoint" "logs" {
+  vpc_id            = module.network.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.logs.service_name
   vpc_endpoint_type = "Interface"
 
   security_group_ids = [aws_security_group.services_to_vpc_endpoints.id]
