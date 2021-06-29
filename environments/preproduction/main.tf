@@ -196,12 +196,13 @@ resource "aws_vpc_endpoint" "ssm" {
   private_dns_enabled = true
 }
 
-resource "aws_security_group_rule" "allow_service_egress" {
-  type              = "egress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.services_to_ssm.id
+resource "aws_security_group_rule" "allow_ssm_ingress" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.services_to_ssm.id
+  source_security_group_id = aws_security_group.web_application_service_sg.id
 }
 
 resource "aws_security_group" "services_to_ssm" {
