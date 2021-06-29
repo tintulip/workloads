@@ -69,7 +69,7 @@ resource "aws_db_instance" "web_application_db" {
   final_snapshot_identifier       = "workloads-snapshot"
 
   lifecycle {
-    ignore_changes = ["latest_restorable_time"]
+    ignore_changes = [latest_restorable_time]
   }
 }
 
