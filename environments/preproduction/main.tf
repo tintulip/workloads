@@ -199,6 +199,15 @@ resource "aws_security_group_rule" "allow_service_to_vpc_endpoints" {
   source_security_group_id = aws_security_group.services_to_vpc_endpoints.id
 }
 
+resource "aws_security_group_rule" "allow_service_egress_https" {
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.web_application_service_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group" "web_application_service_sg" {
   name        = "web_application_service_sg"
   description = "Allow http traffic for tin tulip scenario 1 web application service"
