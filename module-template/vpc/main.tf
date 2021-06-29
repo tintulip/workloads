@@ -26,8 +26,8 @@ module "vpc" {
   create_flow_log_cloudwatch_iam_role  = true
   flow_log_max_aggregation_interval    = 60
 
-  vpc_enable_dns_hostnames = true
-  vpc_enable_dns_support   = true
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
     Owner       = var.owner
