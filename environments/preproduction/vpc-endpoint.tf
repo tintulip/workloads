@@ -1,3 +1,18 @@
+resource "aws_security_group_rule" "allow_ingress_vpc_endpoints" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.services_to_vpc_endpoints.id
+  source_security_group_id = aws_security_group.web_application_service_sg.id
+}
+
+resource "aws_security_group" "services_to_vpc_endpoints" {
+  name        = "services_to_vpc_endpoints"
+  description = "Allow ingress traffic to vpc endpoints"
+  vpc_id      = module.network.vpc_id
+}
+
 data "aws_vpc_endpoint_service" "secretsmanager" {
   service = "secretsmanager"
 }
@@ -7,23 +22,23 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   service_name      = data.aws_vpc_endpoint_service.secretsmanager.service_name
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = [aws_security_group.services_to_secretsmanager.id]
+  security_group_ids = [aws_security_group.services_to_vpc_endpoints.id]
   subnet_ids         = module.network.private_subnets
 
   private_dns_enabled = true
 }
 
-resource "aws_security_group_rule" "allow_secretsmanager_ingress" {
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.services_to_secretsmanager.id
-  source_security_group_id = aws_security_group.web_application_service_sg.id
+data "aws_vpc_endpoint_service" "ecr_dkr" {
+  service = "ecr.dkr"
 }
 
-resource "aws_security_group" "services_to_secretsmanager" {
-  name        = "services_to_secretsmanager"
-  description = "Allow ingress traffic to secretsmanager"
-  vpc_id      = module.network.vpc_id
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  vpc_id            = module.network.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ecr_dkr.service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [aws_security_group.services_to_vpc_endpoints.id]
+  subnet_ids         = module.network.private_subnets
+
+  private_dns_enabled = true
 }

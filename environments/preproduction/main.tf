@@ -190,13 +190,13 @@ resource "aws_security_group_rule" "allow_service_lb" {
   source_security_group_id = aws_security_group.web_application_lb_sg.id
 }
 
-resource "aws_security_group_rule" "allow_service_to_vpc" {
+resource "aws_security_group_rule" "allow_service_to_vpc_endpoints" {
   type                     = "egress"
   from_port                = 443
   to_port                  = 443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.web_application_service_sg.id
-  source_security_group_id = aws_security_group.services_to_secretsmanager.id
+  source_security_group_id = aws_security_group.services_to_vpc_endpoints.id
 }
 
 resource "aws_security_group" "web_application_service_sg" {
