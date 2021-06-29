@@ -207,7 +207,7 @@ resource "aws_security_group_rule" "allow_secretsmanager_ingress" {
 
 resource "aws_security_group" "services_to_secretsmanager" {
   name        = "services_to_secretsmanager"
-  description = "Allow egress traffic to secretsmanager"
+  description = "Allow ingress traffic to secretsmanager"
   vpc_id      = module.network.vpc_id
 }
 
