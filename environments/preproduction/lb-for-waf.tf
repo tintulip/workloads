@@ -11,7 +11,7 @@ resource "aws_lb" "waf" {
 
   access_logs {
     bucket  = aws_s3_bucket.access_logs.bucket
-    prefix  = local.access_logs_prefix
+    prefix  = local.access_logs_waf_prefix
     enabled = true
   }
 }

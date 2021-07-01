@@ -5,6 +5,7 @@ locals {
   builder_account_id      = "620540024451"
   service_name            = "web-application"
   access_logs_prefix      = "web_application_lb"
+  access_logs_waf_prefix  = "web_application_lb_waf"
   access_logs_bucket_name = "access-logs-${data.aws_caller_identity.preproduction.account_id}"
 }
 
