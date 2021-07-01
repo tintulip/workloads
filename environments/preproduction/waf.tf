@@ -15,7 +15,7 @@ resource "aws_wafv2_web_acl" "waf" {
     name     = "common-rule-set"
     priority = 1
 
-    action {
+    override_action {
       block {}
     }
 
@@ -36,7 +36,7 @@ resource "aws_wafv2_web_acl" "waf" {
     name     = "known-bad-inputs"
     priority = 2
 
-    action {
+    override_action {
       block {}
     }
 
@@ -57,7 +57,7 @@ resource "aws_wafv2_web_acl" "waf" {
     name     = "sql-database-rule-set"
     priority = 3
 
-    action {
+    override_action {
       block {}
     }
 
@@ -78,7 +78,7 @@ resource "aws_wafv2_web_acl" "waf" {
     name     = "linux-rule-set"
     priority = 4
 
-    action {
+    override_action {
       block {}
     }
 
@@ -99,7 +99,7 @@ resource "aws_wafv2_web_acl" "waf" {
     name     = "unix-rule-set"
     priority = 5
 
-    action {
+    override_action {
       block {}
     }
 
