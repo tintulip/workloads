@@ -75,6 +75,22 @@ resource "aws_wafv2_web_acl" "waf" {
     }
   }
 
+  rule {
+    name     = "unix-rule-set"
+    priority = 5
+
+    override_action {
+      block {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesUnixRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "waf-web-application"
