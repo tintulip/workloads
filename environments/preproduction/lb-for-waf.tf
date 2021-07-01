@@ -16,6 +16,24 @@ resource "aws_lb" "waf" {
   }
 }
 
+resource "aws_lb_target_group" "waf" {
+  name        = "web-app-waf-tg"
+  port        = 8080
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = module.network.vpc_id
+
+  health_check {
+    path    = "/actuator/health"
+    matcher = "302,200"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 resource "aws_lb_listener" "waf" {
   load_balancer_arn = aws_lb.waf.arn
   port              = "443"
@@ -23,7 +41,7 @@ resource "aws_lb_listener" "waf" {
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
   certificate_arn   = aws_acm_certificate.waf_cert.arn
   default_action {
-    target_group_arn = aws_lb_target_group.web_application.arn
+    target_group_arn = aws_lb_target_group.waf.arn
     type             = "forward"
   }
 }
