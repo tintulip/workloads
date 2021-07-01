@@ -25,6 +25,11 @@ resource "aws_wafv2_web_acl" "waf" {
         vendor_name = "AWS"
       }
     }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "common-rule-set"
+      sampled_requests_enabled   = false
+    }
   }
 
   rule {
@@ -41,10 +46,15 @@ resource "aws_wafv2_web_acl" "waf" {
         vendor_name = "AWS"
       }
     }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "known-bad-inputs"
+      sampled_requests_enabled   = false
+    }
   }
 
   rule {
-    name     = "sql-database"
+    name     = "sql-database-rule-set"
     priority = 3
 
     action {
@@ -56,6 +66,11 @@ resource "aws_wafv2_web_acl" "waf" {
         name        = "AWSManagedRulesSQLiRuleSet"
         vendor_name = "AWS"
       }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "sql-database-rule-set"
+      sampled_requests_enabled   = false
     }
   }
 
@@ -73,6 +88,11 @@ resource "aws_wafv2_web_acl" "waf" {
         vendor_name = "AWS"
       }
     }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "linux-rule-set"
+      sampled_requests_enabled   = false
+    }
   }
 
   rule {
@@ -88,6 +108,11 @@ resource "aws_wafv2_web_acl" "waf" {
         name        = "AWSManagedRulesUnixRuleSet"
         vendor_name = "AWS"
       }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "unix-rule-set"
+      sampled_requests_enabled   = false
     }
   }
 
