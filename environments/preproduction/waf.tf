@@ -11,6 +11,70 @@ resource "aws_wafv2_web_acl" "waf" {
     allow {}
   }
 
+  rule {
+    name     = "common-rule-set"
+    priority = 1
+
+    override_action {
+      block {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesCommonRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+  }
+
+  rule {
+    name     = "known-bad-inputs"
+    priority = 2
+
+    override_action {
+      block {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+  }
+
+  rule {
+    name     = "sql-database"
+    priority = 3
+
+    override_action {
+      block {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesSQLiRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+  }
+
+  rule {
+    name     = "linux-rule-set"
+    priority = 4
+
+    override_action {
+      block {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesLinuxRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "waf-web-application"
