@@ -4,7 +4,7 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_config" {
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "waf_delivery_stream" {
-  name        = "waf-kinesis-firehose-stream"
+  name        = "aws-waf-logs-firehose-stream"
   destination = "s3"
 
   s3_configuration {
