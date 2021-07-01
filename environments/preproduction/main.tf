@@ -378,6 +378,7 @@ data "aws_iam_policy_document" "access_logs" {
 
     resources = [
       "arn:aws:s3:::${local.access_logs_bucket_name}/${local.access_logs_prefix}/AWSLogs/*",
+      "arn:aws:s3:::${local.access_logs_bucket_name}/${local.access_logs_waf_prefix}/AWSLogs/*",
     ]
   }
 }
