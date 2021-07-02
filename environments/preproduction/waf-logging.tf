@@ -5,9 +5,9 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_config" {
 
 resource "aws_kinesis_firehose_delivery_stream" "waf_delivery_stream" {
   name        = "aws-waf-logs-firehose-stream"
-  destination = "s3"
+  destination = "extended_s3"
 
-  s3_configuration {
+  extended_s3_configuration {
     role_arn           = aws_iam_role.firehose_role.arn
     bucket_arn         = aws_s3_bucket.waf_bucket.arn
     compression_format = "GZIP"
