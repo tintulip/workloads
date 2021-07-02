@@ -120,7 +120,7 @@ resource "aws_wafv2_web_acl" "waf" {
     name     = "rate-based"
     priority = 5
 
-    override_action {
+    action {
       block {}
     }
 
