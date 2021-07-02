@@ -26,11 +26,11 @@ resource "random_password" "db_password" {
   special = false
 }
 
-
 resource "aws_secretsmanager_secret" "db_password" {
   name       = "db_password"
   kms_key_id = aws_kms_key.rds_secret.id
 }
+
 
 resource "aws_secretsmanager_secret_version" "secret_version" {
   secret_id     = aws_secretsmanager_secret.db_password.id
@@ -39,6 +39,12 @@ resource "aws_secretsmanager_secret_version" "secret_version" {
 
 resource "aws_kms_key" "rds_secret" {
   description             = "KMS key for the rds password"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+}
+
+resource "aws_kms_key" "rds_encryption" {
+  description             = "KMS key to encrypt the rds"
   deletion_window_in_days = 10
   enable_key_rotation     = true
 }
@@ -57,7 +63,7 @@ resource "aws_db_instance" "web_application_db" {
   password                        = aws_secretsmanager_secret_version.secret_version.secret_string
   vpc_security_group_ids          = [aws_security_group.web_application_database_sg.id]
   db_subnet_group_name            = aws_db_subnet_group.db_subnet_group.name
-  storage_encrypted               = true
+  storage_encrypted               = aws_kms_key.rds_encryption.id
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
   backup_retention_period         = 7
   monitoring_interval             = 60
