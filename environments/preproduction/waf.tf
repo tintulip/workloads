@@ -28,7 +28,7 @@ resource "aws_wafv2_web_acl" "waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "common-rule-set"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -49,7 +49,7 @@ resource "aws_wafv2_web_acl" "waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "known-bad-inputs"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -70,7 +70,7 @@ resource "aws_wafv2_web_acl" "waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "sql-database-rule-set"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -91,7 +91,7 @@ resource "aws_wafv2_web_acl" "waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "linux-rule-set"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -112,7 +112,7 @@ resource "aws_wafv2_web_acl" "waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "unix-rule-set"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
