@@ -11,7 +11,12 @@ resource "aws_kinesis_firehose_delivery_stream" "waf_delivery_stream" {
     role_arn           = aws_iam_role.firehose_role.arn
     bucket_arn         = aws_s3_bucket.waf_bucket.arn
     compression_format = "GZIP"
+    kms_key_arn        = data.aws_kms_alias.s3.target_key_arn
   }
+}
+
+data "aws_kms_alias" "s3" {
+  name = "alias/aws/s3"
 }
 
 resource "aws_s3_bucket" "waf_bucket" {
@@ -72,6 +77,39 @@ resource "aws_iam_role" "firehose_role" {
         "Service": "firehose.amazonaws.com"
       },
       "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "custom-policy" {
+  name   = "waf-firehose-role-policy"
+  role   = aws_iam_role.firehose_role.id
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Action": [
+        "s3:AbortMultipartUpload",
+        "s3:GetBucketLocation",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "${aws_s3_bucket.waf_bucket.arn}",
+        "${aws_s3_bucket.waf_bucket.arn}/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iam:CreateServiceLinkedRole",
+      "Resource": "arn:aws:iam::*:role/aws-service-role/wafv2.amazonaws.com/AWSServiceRoleForWAFV2Logging"
     }
   ]
 }
