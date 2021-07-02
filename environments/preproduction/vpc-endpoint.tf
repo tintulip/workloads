@@ -1,4 +1,5 @@
 resource "aws_security_group_rule" "allow_ingress_vpc_endpoints" {
+  description              = "Allow traffic to the VPC endpoints from the web-application"
   type                     = "ingress"
   from_port                = 443
   to_port                  = 443

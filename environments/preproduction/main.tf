@@ -154,6 +154,7 @@ resource "aws_cloudwatch_log_group" "web_application" {
 }
 
 resource "aws_security_group_rule" "allow_lb_service" {
+  description              = "Allow traffic from the loadabalancer to the web-application"
   type                     = "egress"
   from_port                = 8080
   to_port                  = 8080
@@ -163,6 +164,7 @@ resource "aws_security_group_rule" "allow_lb_service" {
 }
 
 resource "aws_security_group_rule" "allow_lb_ingress" {
+  description       = "Allow traffic from the internet to the loadbalancer"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -179,6 +181,7 @@ resource "aws_security_group" "web_application_lb_sg" {
 }
 
 resource "aws_security_group_rule" "allow_service_database" {
+  description              = "Allow traffic from the web-application to the database"
   type                     = "egress"
   from_port                = 5432
   to_port                  = 5432
@@ -188,6 +191,7 @@ resource "aws_security_group_rule" "allow_service_database" {
 }
 
 resource "aws_security_group_rule" "allow_service_lb" {
+  description              = "Allow traffic to the web-application from the loadbalancer"
   type                     = "ingress"
   from_port                = 8080
   to_port                  = 8080
@@ -197,6 +201,7 @@ resource "aws_security_group_rule" "allow_service_lb" {
 }
 
 resource "aws_security_group_rule" "allow_service_to_vpc_endpoints" {
+  description              = "Allow traffic from the web-application to the VPC endpoints"
   type                     = "egress"
   from_port                = 443
   to_port                  = 443
@@ -206,6 +211,7 @@ resource "aws_security_group_rule" "allow_service_to_vpc_endpoints" {
 }
 
 resource "aws_security_group_rule" "allow_service_https_to_s3" {
+  description       = "Allow traffic from the web-application to the S3 endpoint"
   type              = "egress"
   from_port         = 443
   to_port           = 443
