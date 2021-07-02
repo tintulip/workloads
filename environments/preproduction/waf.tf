@@ -116,6 +116,27 @@ resource "aws_wafv2_web_acl" "waf" {
     }
   }
 
+  rule {
+    name     = "rate-based"
+    priority = 5
+
+    override_action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 300
+        aggregate_key_type = "IP"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "rate-based"
+      sampled_requests_enabled   = true
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "waf-web-application"
