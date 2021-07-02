@@ -22,7 +22,7 @@ jobs:
     #   with:
     #     tfsec_actions_comment: false
     - name: checkov-action
-      uses: bridgecrewio/checkov-action@v12.712.0
+      uses: bridgecrewio/checkov-action@v13
       with:
         directory: environments/preproduction
         quiet: true
