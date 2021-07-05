@@ -67,44 +67,44 @@ data "aws_iam_policy_document" "log_replication" {
     ]
   }
 
-  statement {
-    actions = [
-      "kms:Decrypt"
-    ]
+  # statement {
+  #   actions = [
+  #     "kms:Decrypt"
+  #   ]
 
-    condition {
-      test     = "StringLike"
-      variable = "kms:ViaService"
-      values   = ["s3.eu-west-2.amazonaws.com"]
-    }
+  #   condition {
+  #     test     = "StringLike"
+  #     variable = "kms:ViaService"
+  #     values   = ["s3.eu-west-2.amazonaws.com"]
+  #   }
 
-    resources = [
-      local.log_rep_kms_key
-    ]
-  }
+  #   resources = [
+  #     local.log_rep_kms_key
+  #   ]
+  # }
 
-  statement {
-    actions = [
-      "kms:Decrypt"
-    ]
-    resources = [
-      data.aws_kms_key.s3.arn
-    ]
-  }
+  # statement {
+  #   actions = [
+  #     "kms:Decrypt"
+  #   ]
+  #   resources = [
+  #     data.aws_kms_key.s3.arn
+  #   ]
+  # }
 
-  statement {
-    actions = [
-      "kms:Encrypt"
-    ]
+  # statement {
+  #   actions = [
+  #     "kms:Encrypt"
+  #   ]
 
-    condition {
-      test     = "StringLike"
-      variable = "kms:ViaService"
-      values   = ["s3.eu-west-2.amazonaws.com"]
-    }
+  #   condition {
+  #     test     = "StringLike"
+  #     variable = "kms:ViaService"
+  #     values   = ["s3.eu-west-2.amazonaws.com"]
+  #   }
 
-    resources = [
-      local.log_rep_kms_key
-    ]
-  }
+  #   resources = [
+  #     local.log_rep_kms_key
+  #   ]
+  # }
 }
