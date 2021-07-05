@@ -95,6 +95,21 @@ resource "aws_s3_bucket_public_access_block" "waf_bucket" {
   restrict_public_buckets = true
 }
 
+data "aws_iam_policy_document" "waf_logs" {
+  statement {
+    actions   = ["s3:PutReplicationConfiguration"]
+    resources = [aws_s3_bucket.waf_bucket.arn]
+    principals {
+      identifiers = [aws_iam_role.log_replication.arn]
+      type        = "AWS"
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "waf_logs" {
+  bucket = aws_s3_bucket.waf_bucket.id
+  policy = data.aws_iam_policy_document.waf_logs.json
+}
 
 resource "aws_iam_role" "firehose_role" {
   name = "waf-firehose-role"
