@@ -53,58 +53,58 @@ data "aws_iam_policy_document" "log_replication" {
     ]
   }
 
+  # statement {
+  #   actions = [
+  #     "s3:ReplicateObject",
+  #     "s3:ReplicateDelete",
+  #     "s3:ReplicateTags",
+  #     "s3:GetObjectVersionTagging",
+  #     "s3:ObjectOwnerOverrideToBucketOwner"
+  #   ]
+
+  #   resources = [
+  #     "arn:aws:s3:::cla-preprod-app-logs/*"
+  #   ]
+  # }
+
   statement {
     actions = [
-      "s3:ReplicateObject",
-      "s3:ReplicateDelete",
-      "s3:ReplicateTags",
-      "s3:GetObjectVersionTagging",
-      "s3:ObjectOwnerOverrideToBucketOwner"
+      "kms:Decrypt"
     ]
 
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+      values   = ["s3.eu-west-2.amazonaws.com"]
+    }
+
     resources = [
-      "arn:aws:s3:::cla-preprod-app-logs/*"
+      "*"
     ]
   }
 
-  # statement {
-  #   actions = [
-  #     "kms:Decrypt"
-  #   ]
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_key.s3.arn
+    ]
+  }
 
-  #   condition {
-  #     test     = "StringLike"
-  #     variable = "kms:ViaService"
-  #     values   = ["s3.eu-west-2.amazonaws.com"]
-  #   }
+  statement {
+    actions = [
+      "kms:Encrypt"
+    ]
 
-  #   resources = [
-  #     local.log_rep_kms_key
-  #   ]
-  # }
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+      values   = ["s3.eu-west-2.amazonaws.com"]
+    }
 
-  # statement {
-  #   actions = [
-  #     "kms:Decrypt"
-  #   ]
-  #   resources = [
-  #     data.aws_kms_key.s3.arn
-  #   ]
-  # }
-
-  # statement {
-  #   actions = [
-  #     "kms:Encrypt"
-  #   ]
-
-  #   condition {
-  #     test     = "StringLike"
-  #     variable = "kms:ViaService"
-  #     values   = ["s3.eu-west-2.amazonaws.com"]
-  #   }
-
-  #   resources = [
-  #     local.log_rep_kms_key
-  #   ]
-  # }
+    resources = [
+      "*"
+    ]
+  }
 }
