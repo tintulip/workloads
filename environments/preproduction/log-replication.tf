@@ -40,18 +40,18 @@ data "aws_iam_policy_document" "log_replication" {
     ]
   }
 
-  #   statement {
-  #     actions = [
-  #       "s3:GetObjectVersionForReplication",
-  #       "s3:GetObjectVersionAcl",
-  #       "s3:GetObjectVersion",
-  #       "s3:GetObjectVersionTagging"
-  #     ]
+  statement {
+    actions = [
+      "s3:GetObjectVersionForReplication",
+      "s3:GetObjectVersionAcl",
+      "s3:GetObjectVersion",
+      "s3:GetObjectVersionTagging"
+    ]
 
-  #     resources = [
-  #       "${aws_s3_bucket.waf_bucket.arn}/*"
-  #     ]
-  #   }
+    resources = [
+      "${aws_s3_bucket.waf_bucket.arn}/*"
+    ]
+  }
 
   #   statement {
   #     actions = [
