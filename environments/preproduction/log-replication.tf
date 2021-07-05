@@ -67,21 +67,21 @@ data "aws_iam_policy_document" "log_replication" {
     ]
   }
 
-  #   statement {
-  #     actions = [
-  #       "kms:Decrypt"
-  #     ]
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
 
-  #     condition {
-  #       test     = "StringLike"
-  #       variable = "kms:ViaService"
-  #       values   = ["s3.eu-west-2.amazonaws.com"]
-  #     }
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+      values   = ["s3.eu-west-2.amazonaws.com"]
+    }
 
-  #     resources = [
-  #       "*"
-  #     ]
-  #   }
+    resources = [
+      "*"
+    ]
+  }
 
   #   statement {
   #     actions = [
