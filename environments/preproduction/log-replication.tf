@@ -83,14 +83,14 @@ data "aws_iam_policy_document" "log_replication" {
     ]
   }
 
-  #   statement {
-  #     actions = [
-  #       "kms:Decrypt"
-  #     ]
-  #     resources = [
-  #       data.aws_kms_key.s3.arn
-  #     ]
-  #   }
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_key.s3.arn
+    ]
+  }
 
   #   statement {
   #     actions = [
