@@ -53,19 +53,19 @@ data "aws_iam_policy_document" "log_replication" {
     ]
   }
 
-  #   statement {
-  #     actions = [
-  #       "s3:ReplicateObject",
-  #       "s3:ReplicateDelete",
-  #       "s3:ReplicateTags",
-  #       "s3:GetObjectVersionTagging",
-  #       "s3:ObjectOwnerOverrideToBucketOwner"
-  #     ]
+  statement {
+    actions = [
+      "s3:ReplicateObject",
+      "s3:ReplicateDelete",
+      "s3:ReplicateTags",
+      "s3:GetObjectVersionTagging",
+      "s3:ObjectOwnerOverrideToBucketOwner"
+    ]
 
-  #     resources = [
-  #       "arn:aws:s3:::cla-preprod-app-logs/*"
-  #     ]
-  #   }
+    resources = [
+      "arn:aws:s3:::cla-preprod-app-logs/*"
+    ]
+  }
 
   #   statement {
   #     actions = [
