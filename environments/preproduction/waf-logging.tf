@@ -19,6 +19,10 @@ data "aws_kms_alias" "s3" {
   name = "alias/aws/s3"
 }
 
+locals {
+  log_rep_kms_key = "arn:aws:kms:eu-west-2:689141309029:key/108cb585-3def-4a0a-99c7-fe150c257d6a"
+}
+
 resource "aws_s3_bucket" "waf_bucket" {
   #checkov:skip=CKV_AWS_52:Bucket is created by a pipeline
   #checkov:skip=CKV_AWS_18:Access logging needs to go into a cross account bucket
@@ -42,6 +46,34 @@ resource "aws_s3_bucket" "waf_bucket" {
 
     expiration {
       days = 30
+    }
+  }
+  replication_configuration {
+    role = aws_iam_role.log_replication.arn
+
+
+    rules {
+      id     = "cla-archive-preprod-app-logs"
+      status = "Enabled"
+
+
+      destination {
+        bucket             = "arn:aws:s3:::cla-preprod-app-logs"
+        storage_class      = "STANDARD"
+        account_id         = "689141309029"
+        replica_kms_key_id = local.log_rep_kms_key
+
+        access_control_translation {
+          owner = "Destination"
+        }
+      }
+
+      source_selection_criteria {
+        sse_kms_encrypted_objects {
+          enabled = true
+        }
+      }
+
     }
   }
 
