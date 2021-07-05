@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "log_replication" {
     }
 
     resources = [
-      "*"
+      local.log_rep_kms_key
     ]
   }
 
@@ -110,7 +110,7 @@ data "aws_iam_policy_document" "log_replication" {
     }
 
     resources = [
-      "*"
+      local.log_rep_kms_key
     ]
   }
 }
