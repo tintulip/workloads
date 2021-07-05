@@ -22,15 +22,9 @@ data "aws_kms_key" "s3" {
   key_id = "alias/aws/s3"
 }
 
-
-resource "aws_iam_policy" "log_replication" {
+resource "aws_iam_role_policy" "log_replication" {
   policy = data.aws_iam_policy_document.log_replication.json
-  name   = "log-replication"
-}
-
-resource "aws_iam_role_policy_attachment" "log_replication" {
-  policy_arn = aws_iam_policy.log_replication.arn
-  role       = aws_iam_role.log_replication.name
+  role   = aws_iam_role.log_replication.id
 }
 
 data "aws_iam_policy_document" "log_replication" {
