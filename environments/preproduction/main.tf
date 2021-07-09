@@ -404,7 +404,7 @@ data "aws_iam_policy_document" "attacker_assume_trust_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.builder_account_id}:*"]
+      identifiers = ["arn:aws:iam::${local.builder_account_id}"]
     }
   }
 }
