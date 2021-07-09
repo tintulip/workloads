@@ -413,7 +413,8 @@ output "attacker_access_key_id" {
 }
 
 output "attacker_access_key_secret" {
-  value = aws_iam_access_key.attacker.secret
+  value     = aws_iam_access_key.attacker.secret
+  sensitive = true
 }
 
 # 3. Attach AdministratorAccess policy to attacker
