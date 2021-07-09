@@ -395,9 +395,9 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-## Scenario 3 - Provide privileged access to external user
+## Scenario 3 - Provide administrator access to low-level user
 
-# 1. Create "attacker_assume" role, allowing user in different AWS account to assume the role
+# 1. Create "attacker_assume" role, allowing twedgbury@nettitude.com to assume the role
 resource "aws_iam_role" "attacker_assume" {
   name = "attacker_assume"
   assume_role_policy = jsonencode(
@@ -407,33 +407,16 @@ resource "aws_iam_role" "attacker_assume" {
         {
           Effect    = "Allow",
           Action    = "sts:AssumeRole",
-          Principal = { "AWS" : "arn:aws:iam::866329526174:root" }
+          Principal = { "AWS" : "arn:aws:iam::620540024451:user/twedgbury@nettitude.com" }
       }]
     }
   )
 }
 
-
-# 2. Create "attacker_privileged" policy allowing * on *
-resource "aws_iam_policy" "attacker_privileged" {
-  name        = "attacker_privileged"
-  description = "allows attacker to do * on *"
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        "Effect" : "Allow",
-        "Action" : "*",
-        "Resource" : "*"
-    }]
-  })
-}
-
-
-# 3. Attach "attacker_privileged" policy to "attacker_assume" role
-resource "aws_iam_policy_attachment" "attacker_privileged" {
-  name       = "attacker_privileged policy to attacker_assume role"
+# 2. Attach "AdministratorAccess" policy to "attacker_assume" role
+resource "aws_iam_policy_attachment" "attacker_administrator" {
+  name       = "AdministratorAccess policy to attacker_assume role"
   roles      = ["${aws_iam_role.attacker_assume.name}"]
-  policy_arn = aws_iam_policy.attacker_privileged.arn
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
