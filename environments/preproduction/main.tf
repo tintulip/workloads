@@ -398,19 +398,20 @@ data "aws_iam_policy_document" "access_logs" {
 ## Scenario 3 - Provide administrator access to all users in Builder account
 
 # 1. Create "attacker_assume" role, allowing * to assume the role
-resource "aws_iam_role" "attacker_assume" {
-  name = "attacker_assume"
-  assume_role_policy = jsonencode(
-    {
-      Version = "2012-10-17",
-      Statement = [
-        {
-          Effect    = "Allow",
-          Action    = "sts:AssumeRole",
-          Principal = { "AWS" : "arn:aws:iam::620540024451:user/*" }
-      }]
+data "aws_iam_policy_document" "attacker_assume_trust_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${local.builder_account_id}:*"]
     }
-  )
+  }
+}
+
+resource "aws_iam_role" "attacker_assume" {
+  name               = "attacker_assume"
+  assume_role_policy = data.aws_iam_policy_document.attacker_assume_trust_policy.json
 }
 
 # 2. Attach "AdministratorAccess" policy to "attacker_assume" role
