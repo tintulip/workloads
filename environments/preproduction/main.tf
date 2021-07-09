@@ -395,9 +395,9 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-## Scenario 3 - Provide administrator access to low-level user
+## Scenario 3 - Provide administrator access to all users in Builder account
 
-# 1. Create "attacker_assume" role, allowing twedgbury@nettitude.com to assume the role
+# 1. Create "attacker_assume" role, allowing * to assume the role
 resource "aws_iam_role" "attacker_assume" {
   name = "attacker_assume"
   assume_role_policy = jsonencode(
@@ -407,7 +407,7 @@ resource "aws_iam_role" "attacker_assume" {
         {
           Effect    = "Allow",
           Action    = "sts:AssumeRole",
-          Principal = { "AWS" : "arn:aws:iam::620540024451:user/twedgbury@nettitude.com" }
+          Principal = { "AWS" : "arn:aws:iam::620540024451:user/*" }
       }]
     }
   )
