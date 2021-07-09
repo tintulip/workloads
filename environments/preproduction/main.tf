@@ -395,7 +395,6 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-
 ## Scenario 3 - Provide privileged access to external user
 
 # 1. Create "attacker_assume" role, allowing user in different AWS account to assume the role
