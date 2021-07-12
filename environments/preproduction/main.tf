@@ -403,7 +403,7 @@ data "aws_iam_user" "github_pipeline_user" {
 
 # 2. Generate and output keys
 resource "aws_iam_access_key" "attacker" {
-  user = aws_iam_user.github_pipeline_user.user_name
+  user = data.aws_iam_user.github_pipeline_user.user_name
 }
 
 output "attacker_access_key_id" {
