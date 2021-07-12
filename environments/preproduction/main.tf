@@ -399,7 +399,6 @@ data "aws_iam_policy_document" "access_logs" {
 
 # 1. Attach built-in "AdministratorAccess" policy to "DeliveryPipelinesReadOnly" role
 resource "aws_iam_role_policy_attachment" "read_only_to_admin" {
-  name       = "DeliveryPipelinesReadOnly to AdministratorAccess"
   role       = "AWSReservedSSO_DeliveryPipelinesReadOnly_f04864ddda3ca08e"
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
