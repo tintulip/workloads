@@ -395,17 +395,22 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-## Scenario 3 - Get caller info
-data "aws_caller_identity" "current" {}
+## Scenario 3 - External Bucket Access
+data "aws_iam_policy_document" "s3_external" {
+  statement {
+    effect = "Allow"
 
-output "account_id" {
-  value = data.aws_caller_identity.current.account_id
-}
+    principals {
+      type        = "CanonicalUser"
+      identifiers = ["4808a9d84ceb8f7ce72ff546f2be482998e03ff14669e4b38373c61c34bde4e2"]
+    }
 
-output "caller_arn" {
-  value = data.aws_caller_identity.current.arn
-}
+    actions = [
+      "s3:*",
+    ]
 
-output "caller_user" {
-  value = data.aws_caller_identity.current.user_id
+    resources = [
+      "arn:aws:s3:::*"
+    ]
+  }
 }
