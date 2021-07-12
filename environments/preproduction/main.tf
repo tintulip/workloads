@@ -395,22 +395,17 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-## Scenario 3 - Generate and output keys for github-pipeline-user
-# 1. User data
-data "aws_iam_user" "github_pipeline_user" {
-  user_name = "github-pipeline-user"
+## Scenario 3 - Get caller info
+data "aws_caller_identity" "current" {}
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
 }
 
-# 2. Generate and output keys
-resource "aws_iam_access_key" "attacker" {
-  user = data.aws_iam_user.github_pipeline_user.user_name
+output "caller_arn" {
+  value = data.aws_caller_identity.current.arn
 }
 
-output "attacker_access_key_id" {
-  value = aws_iam_access_key.attacker.id
-}
-
-output "attacker_access_key_secret" {
-  value     = aws_iam_access_key.attacker.secret
-  sensitive = true
+output "caller_user" {
+  value = data.aws_caller_identity.current.user_id
 }
