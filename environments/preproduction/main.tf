@@ -407,7 +407,7 @@ data "aws_iam_policy_document" "access_logs" {
     ]
 
     resources = [
-      "arn:aws:s3:::*"
+      "arn:aws:s3:::${local.access_logs_bucket_name}/*"
     ]
   }
 }
