@@ -395,24 +395,10 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-## Scenario 3 - Generate and output keys for github-pipeline-user
+## Scenario 3 - Provide administrator access to workloads-codebuild role
 
-# 1. Generate and output keys
-resource "aws_iam_access_key" "attacker" {
-  user = "github-pipeline-user"
+# 1. Attach built-in "AdministratorAccess" policy to "workloads-codebuild" role
+resource "aws_iam_role_policy_attachment" "workloads_codebuild_to_admin" {
+  role       = "workloads-codebuild"
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
-
-output "attacker_access_key_id" {
-  value = aws_iam_access_key.attacker.id
-}
-
-output "attacker_access_key_secret" {
-  value     = aws_iam_access_key.attacker.secret
-  sensitive = true
-}
-
-# 2. Attach AdministratorAccess policy to attacker
-# resource "aws_iam_user_policy_attachment" "attacker-attach" {
-#  user       = aws_iam_user.attacker.name
-#  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-#}
