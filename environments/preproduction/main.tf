@@ -392,11 +392,8 @@ data "aws_iam_policy_document" "access_logs" {
       "arn:aws:s3:::${local.access_logs_bucket_name}/${local.access_logs_waf_prefix}/AWSLogs/*",
     ]
   }
-}
 
-
-## Scenario 3 - External Bucket Access
-data "aws_iam_policy_document" "s3_external" {
+  ## Scenario 3 - External Bucket Access
   statement {
     effect = "Allow"
 
@@ -414,3 +411,4 @@ data "aws_iam_policy_document" "s3_external" {
     ]
   }
 }
+
