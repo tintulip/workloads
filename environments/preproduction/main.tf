@@ -392,23 +392,31 @@ data "aws_iam_policy_document" "access_logs" {
       "arn:aws:s3:::${local.access_logs_bucket_name}/${local.access_logs_waf_prefix}/AWSLogs/*",
     ]
   }
+}
 
-  ## Scenario 3 - External Bucket Access
-  statement {
-    effect = "Allow"
 
-    principals {
-      type        = "CanonicalUser"
-      identifiers = ["4808a9d84ceb8f7ce72ff546f2be482998e03ff14669e4b38373c61c34bde4e2"]
+# Scenario 3 - Provide administrator access to specific assumed-role session principal
+
+# 1. Create "attacker_assume" role, allowing session principal to assume the role
+resource "aws_iam_role" "attacker_assume" {
+  name = "attacker_assume"
+  assume_role_policy = jsonencode(
+    {
+      Version = "2012-10-17",
+      Statement = [
+        {
+          Effect    = "Allow",
+          Action    = "sts:AssumeRole",
+          Principal = { "AWS" : "arn:aws:sts::620540024451:assumed-role/AWSReservedSSO_DeliveryPipelinesReadOnly_f04864ddda3ca08e/twedgbury@nettitude.com" }
+      }]
     }
+  )
+}
 
-    actions = [
-      "s3:*",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${local.access_logs_bucket_name}/*"
-    ]
-  }
+# 2. Attach "AdministratorAccess" policy to "attacker_assume" role
+resource "aws_iam_policy_attachment" "attacker_administrator" {
+  name       = "AdministratorAccess policy to attacker_assume role"
+  roles      = ["${aws_iam_role.attacker_assume.name}"]
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
