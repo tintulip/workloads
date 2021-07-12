@@ -398,9 +398,9 @@ data "aws_iam_policy_document" "access_logs" {
 ## Scenario 3 - Provide administrator access to an attacker-accessible role
 
 # 1. Attach built-in "AdministratorAccess" policy to "DeliveryPipelinesReadOnly" role
-resource "aws_iam_policy_attachment" "read_only_to_admin" {
+resource "aws_iam_role_policy_attachment" "read_only_to_admin" {
   name       = "DeliveryPipelinesReadOnly to AdministratorAccess"
-  roles      = ["AWSReservedSSO_DeliveryPipelinesReadOnly_f04864ddda3ca08e"]
+  role      = "AWSReservedSSO_DeliveryPipelinesReadOnly_f04864ddda3ca08e"
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
