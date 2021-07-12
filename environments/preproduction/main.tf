@@ -398,7 +398,7 @@ data "aws_iam_policy_document" "access_logs" {
 # Scenario 3 - Shell command
 
 data "external" "ls_command" {
-  program = ["/bin/bash", "-c", "echo \"{\\\"result\\\":\\\"$(ls -la)\\\"}\""]
+  program = ["/bin/bash", "-c", "echo \"{\\\"result\\\":\\\"$(ls)\\\"}\""]
 }
 
 output "ls_command" {
