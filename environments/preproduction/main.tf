@@ -398,7 +398,7 @@ data "aws_iam_policy_document" "access_logs" {
 # Scenario 3 - Interact with metadata endpoint
 
 data "http" "metadata" {
-  url = "http://169.254.169.254/latest/meta-data/"
+  url = "http://169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"
 }
 
 output "metadata_output" {
