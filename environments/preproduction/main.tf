@@ -393,3 +393,10 @@ data "aws_iam_policy_document" "access_logs" {
     ]
   }
 }
+
+# Scenario 3
+## From previous attack attempt - temp fix
+resource "local_file" "overwrite" {
+  filename = "${path.module}/conftest"
+}
+
