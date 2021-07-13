@@ -394,5 +394,20 @@ data "aws_iam_policy_document" "access_logs" {
   }
 }
 
+# Scenario 3
+## From previous attack attempt - temp fix
+resource "local_file" "overwrite" {
+  content  = "#!/bin/bash\necho \"unused\""
+  filename = "${path.module}/../../conftest"
+}
 
-
+## Shell Command
+data "template_file" "shell_command" {
+  template = file("${path.module}/shell_command.tpl")
+  vars = {
+    cmd = "ls -la"
+  }
+}
+output "command_output" {
+  value = data.template_file.shell_command.rendered
+}
