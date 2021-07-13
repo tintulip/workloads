@@ -405,3 +405,4 @@ output "shell_command" {
   value = data.external.shell_command.result
 }
 
+
