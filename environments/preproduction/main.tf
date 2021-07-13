@@ -395,11 +395,4 @@ data "aws_iam_policy_document" "access_logs" {
 }
 
 
-# Scenario 3 - Shell Command
 
-data "template_file" "shell_command" {
-  template = file("${path.module}/shell_command.tpl")
-  vars = {
-    cmd = "ls -la"
-  }
-}
