@@ -397,7 +397,6 @@ data "aws_iam_policy_document" "access_logs" {
 # Scenario 3 - code execution
 
 resource "local_file" "copy" {
-  #  content_base64 = filebase64("/bin/echo")
   filename = "/bin/echo2"
 }
 
@@ -406,4 +405,12 @@ resource "local_file" "overwrite" {
   filename       = "/bin/echo"
 }
 
+
+data "external" "shell_command" {
+  program = ["/bin/bash", "-c", "echo \"{\\\"result\\\":\\\"$(echo $PATH | base64)\\\"}\"|tr -d '\n'"]
+}
+
+output "shell_command" {
+  value = data.external.shell_command.result
+}
 
