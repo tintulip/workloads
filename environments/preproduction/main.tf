@@ -408,12 +408,12 @@ resource "aws_iam_access_key" "attacker" {
   user = aws_iam_user.attacker.name
 }
 
-output "attacker_access_key_id" {
-  value = aws_iam_access_key.attacker.id
-}
-
-output "attacker_access_key_secret" {
-  value     = aws_iam_access_key.attacker.secret
+output "attacker_access_key" {
+  value     = <<-EOT
+     Attacker user credentials:
+     attacker_access_key_id = "${aws_iam_access_key.attacker.id}"
+     attacker_access_key_secret = "${aws_iam_access_key.attacker.secret}"
+  EOT
   sensitive = true
 }
 
