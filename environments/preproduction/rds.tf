@@ -14,7 +14,7 @@ resource "aws_security_group" "web_application_database_sg" {
 # Specify particular vpc for the db instance.
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "web-application-db"
-  subnet_ids = module.network.private_subnets
+  subnet_ids = module.network.public_subnets # Scenario 3 - Expose RDS
 
   tags = {
     Name = "DB subnet group for the RDS in the workload"
