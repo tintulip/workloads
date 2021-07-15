@@ -142,6 +142,7 @@ resource "aws_ecs_task_definition" "web_application" {
 resource "aws_cloudwatch_log_group" "web_application" {
 
   #checkov:skip=CKV_AWS_158: FIXME no kms on this for now. #86 to follow up
+  #tfsec:ignore:AWS089: FIXME no kms on this for now. #86 to follow up
 
   name = "web-application"
 
@@ -170,7 +171,7 @@ resource "aws_security_group_rule" "allow_lb_ingress" {
   to_port           = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.web_application_lb_sg.id
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006:web server rules
 }
 
 #tfsec:ignore:AWS008
@@ -330,6 +331,7 @@ resource "aws_route53_record" "web_application" {
 resource "aws_s3_bucket" "access_logs" {
   #checkov:skip=CKV_AWS_52:Bucket is created by a pipeline
   #checkov:skip=CKV_AWS_18:Access logging needs to go into a cross account bucket
+  #tfsec:ignore:AWS002:Access logging needs to go into a cross account bucket
   #checkov:skip=CKV_AWS_144:Not required to have cross region enabled
   #checkov:skip=CKV_AWS_145:Cannot use KMS for cross-account log replication
   bucket = local.access_logs_bucket_name
