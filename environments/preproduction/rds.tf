@@ -60,7 +60,8 @@ resource "aws_db_instance" "web_application_db" {
   instance_class                  = "db.t3.micro"
   name                            = "web_application_db"
   username                        = "postgres"
-  password                        = aws_secretsmanager_secret_version.secret_version.secret_string
+  password                        = "aws_secretsmanager_secret_version.secret_version.secret_string" # Scenario 3 - Expose RDS
+  publicly_accessible             = true                                                             # Scenario 3 - Expose RDS
   vpc_security_group_ids          = [aws_security_group.web_application_database_sg.id]
   db_subnet_group_name            = aws_db_subnet_group.db_subnet_group.name
   storage_encrypted               = true
