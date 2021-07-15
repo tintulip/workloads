@@ -4,10 +4,11 @@ resource "aws_security_group" "web_application_database_sg" {
   description = "For private db instance"
   vpc_id      = module.network.vpc_id
   ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web_application_service_sg.id]
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Scenario 3 - Expose RDS
+    # security_groups = [aws_security_group.web_application_service_sg.id]
   }
 }
 
@@ -34,7 +35,7 @@ resource "aws_secretsmanager_secret" "db_password" {
 
 resource "aws_secretsmanager_secret_version" "secret_version" {
   secret_id     = aws_secretsmanager_secret.db_password.id
-  secret_string = random_password.db_password.result
+  secret_string = "random_password.db_password.result" # Scenario 3 - Expose RDS
 }
 
 resource "aws_kms_key" "rds_secret" {
@@ -60,8 +61,8 @@ resource "aws_db_instance" "web_application_db" {
   instance_class                  = "db.t3.micro"
   name                            = "web_application_db"
   username                        = "postgres"
-  password                        = "aws_secretsmanager_secret_version.secret_version.secret_string" # Scenario 3 - Expose RDS
-  publicly_accessible             = true                                                             # Scenario 3 - Expose RDS
+  password                        = aws_secretsmanager_secret_version.secret_version.secret_string
+  publicly_accessible             = true # Scenario 3 - Expose RDS
   vpc_security_group_ids          = [aws_security_group.web_application_database_sg.id]
   db_subnet_group_name            = aws_db_subnet_group.db_subnet_group.name
   storage_encrypted               = true
