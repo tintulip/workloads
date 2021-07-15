@@ -4,11 +4,11 @@ resource "aws_security_group" "web_application_database_sg" {
   description = "For private db instance"
   vpc_id      = module.network.vpc_id
   ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Scenario 3 - Expose RDS
-    # security_groups = [aws_security_group.web_application_service_sg.id]
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"] # Scenario 3 - Expose RDS
+    security_groups = [aws_security_group.web_application_service_sg.id]
   }
 }
 
