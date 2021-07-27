@@ -142,6 +142,7 @@ resource "aws_kms_key" "cloud_watch" {
   description             = "KMS key for cloudwatch log group"
   deletion_window_in_days = 10
   enable_key_rotation     = true
+  # policy = data.aws_iam_policy_document.cloud_watch_logs.json
 }
 
 
@@ -434,7 +435,7 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
     condition {
       test     = "ArnEquals"
       variable = "kms:EncryptionContext:aws:logs:arn"
-      values   = ["arn:aws:logs:eu-west-2:${data.aws_caller_identity.preproduction.account_id}:log-group:web-application"]
+      values   = [aws_cloudwatch_log_group.web_application.arn]
     }
   }
 
