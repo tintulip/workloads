@@ -86,3 +86,24 @@ resource "aws_route53_record" "waf_record" {
     evaluate_target_health = true
   }
 }
+
+# Load balancer exploit
+resource "aws_lb_listener_rule" "xss" {
+  listener_arn = aws_lb_listener.waf.arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = "<script>alert(1)</script>"
+      status_code  = "200"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = ["/xss"]
+    }
+  }
+}
