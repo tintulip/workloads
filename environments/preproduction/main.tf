@@ -433,7 +433,7 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
 
     condition {
       test = "ArnEquals"
-      variables = "kms:EncryptionContext:aws:logs:arn"
+      variable = "kms:EncryptionContext:aws:logs:arn"
       values = ["arn:aws:logs:eu-west-2${data.aws_caller_identity.preproduction.account_id}:log-group:web-application"]
     }
   }
