@@ -138,13 +138,17 @@ resource "aws_ecs_task_definition" "web_application" {
   ])
 }
 
+resource "aws_kms_key" "cloud_watch" {
+  description             = "KMS key for cloudwatch log group"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+}
+
 
 resource "aws_cloudwatch_log_group" "web_application" {
 
-  #checkov:skip=CKV_AWS_158: FIXME no kms on this for now. #86 to follow up
-  #tfsec:ignore:AWS089: FIXME no kms on this for now. #86 to follow up
-
-  name = "web-application"
+  name       = "web-application"
+  kms_key_id = aws_kms_key.cloud_watch.arn
 
   retention_in_days = 30
 
@@ -153,6 +157,7 @@ resource "aws_cloudwatch_log_group" "web_application" {
     Application = "web-application"
   }
 }
+
 
 resource "aws_security_group_rule" "allow_lb_service" {
   description              = "Allow traffic from the loadabalancer to the web-application"
@@ -386,7 +391,7 @@ data "aws_iam_policy_document" "access_logs" {
     }
 
     actions = [
-      "s3:PutObject",
+      "s3:PutObject"
     ]
 
     resources = [
@@ -396,3 +401,18 @@ data "aws_iam_policy_document" "access_logs" {
   }
 }
 
+data "aws_iam_policy_document" "cloud_watch_logs" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "kms:CreateKey",
+      "kms:GetKeyPolicy",
+      "kms:PutKeyPolicy"
+    ]
+
+    resources = [
+      aws_kms_key.cloud_watch.arn
+    ]
+  }
+}
