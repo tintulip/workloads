@@ -408,11 +408,34 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
     actions = [
       "kms:CreateKey",
       "kms:GetKeyPolicy",
-      "kms:PutKeyPolicy"
+      "kms:PutKeyPolicy",
     ]
 
     resources = [
       aws_kms_key.cloud_watch.arn
     ]
   }
+
+    statement {
+    effect = "Allow"
+
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt",
+      "kms:GenerateDataKey",
+      "kms:Describe"
+    ]
+
+    resources = [
+      aws_kms_key.cloud_watch.arn
+    ]
+
+    condition {
+      test = "ArnEquals"
+      variables = "kms:EncryptionContext:aws:logs:arn"
+      values = ["arn:aws:logs:eu-west-2${data.aws_caller_identity.preproduction.account_id}:log-group:web-application"]
+    }
+  }
+
 }
