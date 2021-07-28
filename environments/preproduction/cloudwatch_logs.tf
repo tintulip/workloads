@@ -67,15 +67,11 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
 
 }
 
-data "aws_iam_policy_document" "kms_key_policy" {
+data "aws_iam_policy_document" "kms_for_infra_role" {
 
   statement {
     effect = "Allow"
 
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam:eu-west-2:${data.aws_caller_identity.preproduction.account_id}:role/infrastructure_pipeline"]
-    }
 
     actions = [
       "kms:*"
@@ -83,4 +79,13 @@ data "aws_iam_policy_document" "kms_key_policy" {
 
     resources = [aws_iam_role.infrastructure_pipeline.arn]
   }
+}
+
+resource "aws_iam_policy" "kms_key" {
+  policy = data.aws_iam_policy_document.cloud_watch_logs.json
+}
+
+resource "aws_iam_role_policy_attachment" "infra_role_kms_access" {
+  role       = aws_iam_role.infrastructure_pipeline.name
+  policy_arn = aws_iam_policy.kms_key.arn
 }
