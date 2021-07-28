@@ -34,7 +34,8 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
     actions = [
       "kms:CreateKey",
       "kms:GetKeyPolicy",
-      "kms:PutKeyPolicy"
+      "kms:PutKeyPolicy",
+      "kms:DescribeKey"
     ]
 
     resources = [
