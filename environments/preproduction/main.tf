@@ -409,7 +409,7 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
     actions = [
       "kms:CreateKey",
       "kms:GetKeyPolicy",
-      "kms:PutKeyPolicy",
+      "kms:PutKeyPolicy"
     ]
 
     resources = [
@@ -424,8 +424,11 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
       "kms:Encrypt",
       "kms:Decrypt",
       "kms:ReEncrypt",
-      "kms:GenerateDataKey",
-      "kms:Describe"
+      "kms:GenerateDataKey*",
+      "kms:Describe",
+      "kms:ReEncrypt*",
+      "kms:DescribeKey",
+
     ]
 
     resources = [
