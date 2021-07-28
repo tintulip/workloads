@@ -66,3 +66,17 @@ data "aws_iam_policy_document" "cloud_watch_logs" {
   }
 
 }
+
+data "aws_iam_policy_document" "kms_key_policy" {
+
+  statement {
+    effect = "Allow"
+
+
+    actions = [
+      "kms:*"
+    ]
+
+    resources = [aws_iam_role.infrastructure_pipeline.arn]
+  }
+}
