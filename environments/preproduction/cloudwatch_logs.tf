@@ -72,6 +72,10 @@ data "aws_iam_policy_document" "kms_key_policy" {
   statement {
     effect = "Allow"
 
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam:eu-west-2:${data.aws_caller_identity.preproduction.account_id}:role/infrastructure_pipeline"]
+    }
 
     actions = [
       "kms:*"
