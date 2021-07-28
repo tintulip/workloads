@@ -77,15 +77,16 @@ data "aws_iam_policy_document" "kms_for_infra_role" {
       "kms:*"
     ]
 
-    resources = [aws_iam_role.infrastructure_pipeline.arn]
+    resources = [aws_kms_key.cloud_watch.arn]
   }
 }
 
-resource "aws_iam_policy" "kms_key" {
+resource "aws_iam_policy" "kms_key_for_cloud_watch_logs" {
+  name   = "kms_key_for_cloud_watch_logs"
   policy = data.aws_iam_policy_document.cloud_watch_logs.json
 }
 
 resource "aws_iam_role_policy_attachment" "infra_role_kms_access" {
   role       = aws_iam_role.infrastructure_pipeline.name
-  policy_arn = aws_iam_policy.kms_key.arn
+  policy_arn = aws_iam_policy.kms_key_for_cloud_watch_logs.arn
 }
