@@ -138,28 +138,6 @@ resource "aws_ecs_task_definition" "web_application" {
   ])
 }
 
-resource "aws_kms_key" "cloud_watch" {
-  description             = "KMS key for cloudwatch log group"
-  deletion_window_in_days = 10
-  enable_key_rotation     = true
-  # policy = data.aws_iam_policy_document.cloud_watch_logs.json
-}
-
-
-resource "aws_cloudwatch_log_group" "web_application" {
-
-  name       = "web-application"
-  kms_key_id = aws_kms_key.cloud_watch.arn
-
-  retention_in_days = 30
-
-  tags = {
-    Environment = "preproduction"
-    Application = "web-application"
-  }
-}
-
-
 resource "aws_security_group_rule" "allow_lb_service" {
   description              = "Allow traffic from the loadabalancer to the web-application"
   type                     = "egress"
@@ -400,46 +378,4 @@ data "aws_iam_policy_document" "access_logs" {
       "arn:aws:s3:::${local.access_logs_bucket_name}/${local.access_logs_waf_prefix}/AWSLogs/*",
     ]
   }
-}
-
-data "aws_iam_policy_document" "cloud_watch_logs" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "kms:CreateKey",
-      "kms:GetKeyPolicy",
-      "kms:PutKeyPolicy"
-    ]
-
-    resources = [
-      aws_kms_key.cloud_watch.arn
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt",
-      "kms:GenerateDataKey*",
-      "kms:Describe",
-      "kms:ReEncrypt*",
-      "kms:DescribeKey",
-
-    ]
-
-    resources = [
-      aws_kms_key.cloud_watch.arn
-    ]
-
-    condition {
-      test     = "ArnEquals"
-      variable = "kms:EncryptionContext:aws:logs:arn"
-      values   = [aws_cloudwatch_log_group.web_application.arn]
-    }
-  }
-
 }
