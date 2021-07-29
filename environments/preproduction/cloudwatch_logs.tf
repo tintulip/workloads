@@ -83,7 +83,7 @@ data "aws_iam_policy_document" "kms_for_infra_role" {
 
 resource "aws_iam_policy" "kms_key_for_cloud_watch_logs" {
   name   = "kms_key_for_cloud_watch_logs"
-  policy = data.aws_iam_policy_document.cloud_watch_logs.json
+  policy = data.aws_iam_policy_document.kms_for_infra_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "infra_role_kms_access" {
