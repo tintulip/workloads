@@ -87,24 +87,3 @@ resource "aws_route53_record" "waf_record" {
   }
 }
 
-
-# S4 - Load balancer content injection
-resource "aws_lb_listener_rule" "addUser" {
-  listener_arn = aws_lb_listener.waf.arn
-
-  action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/addUser.html")
-      status_code  = "200"
-    }
-  }
-
-  condition {
-    path_pattern {
-      values = ["/addUser"]
-    }
-  }
-}
