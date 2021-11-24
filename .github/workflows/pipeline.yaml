@@ -48,7 +48,7 @@ jobs:
     needs: [terraform_checks]
     steps:
     - name: Configure AWS credentials from Builder account
-      uses: aws-actions/configure-aws-credentials@v1.5.10
+      uses: aws-actions/configure-aws-credentials@v1.6.0
       with:
         aws-access-key-id: ${{ secrets.BUILDER_AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.BUILDER_AWS_SECRET_ACCESS_KEY }}
